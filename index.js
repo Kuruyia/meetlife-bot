@@ -41,17 +41,17 @@ client.on('message', message => {
             hasQuotes = true;
             startQuote = i;
         }
-        if (((args[i].endsWith('"') && !args[i].endsWith('\"')) || i == args.length - 1) && hasQuotes) {
+        if (((args[i].endsWith('"') && !args[i].endsWith('\\"')) || i == args.length - 1) && hasQuotes) {
             hasQuotes = false;
             const stringToAdd = args.slice(startQuote, i + 1).join(' ');
             argsFormatted.push(stringToAdd.substr(1, stringToAdd.length - 2));
         } else if (!hasQuotes) {
             var stringToAdd = args[i];
 
-            if (stringToAdd.startsWith('\"')) {
+            if (stringToAdd.startsWith('\\"')) {
                 stringToAdd = stringToAdd.substr(1);
             }
-            if (stringToAdd.endsWith('\"')) {
+            if (stringToAdd.endsWith('\\"')) {
                 stringToAdd = stringToAdd.substr(0, stringToAdd.length - 2).concat('"');
             }
 
