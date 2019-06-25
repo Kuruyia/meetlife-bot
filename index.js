@@ -91,10 +91,10 @@ function sendUsage(channel, command, message) {
     const constructedEmbed = new Discord.RichEmbed();
     constructedEmbed.setColor('ORANGE');
     
-    if (message.isArray) {
+    if (Array.isArray(message)) {
         var genText = '';
         for (i = 0; i < message.length; i++) {
-            genText = genText.concat('**' + config.prefix + command + '** ' + message[i]);
+            genText = genText.concat('**' + config.prefix + command + '** ' + message[i] + '\n');
         }
 
         constructedEmbed.addField('Usage', genText);
