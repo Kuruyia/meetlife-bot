@@ -10,7 +10,7 @@ module.exports = {
             }
 
             const rep = stuff.choiceMan.addChoice(stuff.message.author.id, new stuff.choice('Test choice', tst, tst, function(option, data) {
-                stuff.message.channel.reply(data[option]);
+                stuff.message.reply(data[option]);
             }));
             if (rep != true) {
                 stuff.sendError(stuff.message.channel, rep);

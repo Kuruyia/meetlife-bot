@@ -68,13 +68,14 @@ client.on('message', message => {
             chronode: chronode,
             request: request,
             sendError: sendError,
+            sendUsage: sendUsage,
             discord: Discord,
             choiceMan: choiceMan,
             choice: choice,
             prefix: config.prefix});
     } catch (error) {
         console.error(error);
-        message.reply('There was an error trying to execute that command!');
+        sendError(message.channel, "An error occured while executing this command.")
     }
 });
 
@@ -82,6 +83,24 @@ function sendError(channel, message) {
     const constructedEmbed = new Discord.RichEmbed();
     constructedEmbed.setColor('RED');
     constructedEmbed.addField('Error', message);
+
+    channel.send(constructedEmbed);
+}
+
+function sendUsage(channel, command, message) {
+    const constructedEmbed = new Discord.RichEmbed();
+    constructedEmbed.setColor('ORANGE');
+    
+    if (message.isArray) {
+        var genText = '';
+        for (i = 0; i < message.length; i++) {
+            genText = genText.concat('**' + config.prefix + command + '** ' + message[i]);
+        }
+
+        constructedEmbed.addField('Usage', genText);
+    } else {
+        constructedEmbed.addField('Usage', '**' + config.prefix + command + '** ' + message);
+    }
 
     channel.send(constructedEmbed);
 }

@@ -50,7 +50,7 @@ module.exports = function() {
             return 'Invalid option';
         }
 
-        selectedUser.callback(parsedOption, selectedUser.data);
+        selectedUser.callback(parsedOption - 1, selectedUser.data);
 
         delete this.choices[user];
 
