@@ -1,9 +1,13 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const chronode = require('chrono-node');
+const request = require('request');
 const dbObjects = require('./dbObjects');
+const choiceManager = require('./choiceManager');
+const choice = require('./choice')
 const config = require('./config.json');
 
+const choiceMan = new choiceManager();
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
@@ -23,6 +27,11 @@ client.on('message', message => {
 
 	const args = message.cleanContent.slice(config.prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
+
+    if (command != 'choice' && choiceMan.hasUserActiveChoice(message.author.id)) {
+        sendError(message.channel, 'You must select an option of your active choice before using the bot.');
+        return;
+    }
     
     var argsFormatted = [];
     var hasQuotes = false;
@@ -56,11 +65,25 @@ client.on('message', message => {
         client.commands.get(command).execute({message: message,
             args: argsFormatted,
             dbObjects: dbObjects,
-            chronode: chronode});
+            chronode: chronode,
+            request: request,
+            sendError: sendError,
+            discord: Discord,
+            choiceMan: choiceMan,
+            choice: choice,
+            prefix: config.prefix});
     } catch (error) {
         console.error(error);
         message.reply('There was an error trying to execute that command!');
     }
 });
+
+function sendError(channel, message) {
+    const constructedEmbed = new Discord.RichEmbed();
+    constructedEmbed.setColor('RED');
+    constructedEmbed.addField('Error', message);
+
+    channel.send(constructedEmbed);
+}
 
 client.login(config.token);
