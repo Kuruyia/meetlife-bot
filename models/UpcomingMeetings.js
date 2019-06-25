@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 		},
 		join_limit: DataTypes.INTEGER,
+		location_name: DataTypes.STRING,
+		location_name_short: DataTypes.STRING,
 	}, {
 		timestamps: false,
 	});
