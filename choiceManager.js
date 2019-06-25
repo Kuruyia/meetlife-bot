@@ -17,17 +17,25 @@ module.exports = function() {
 
     this.sendChoicesToChannel = function(discord, channel, prefix, user) {
         if (this.hasUserActiveChoice(user)) {
-            var choiceList = '';
             const selectedUser = this.choices[user];
-            
-            for (i = 0; i < selectedUser.choiceTexts.length; i++) {
-                const actualText = selectedUser.choiceTexts[i];
-                choiceList = choiceList.concat('**#' + (i + 1) + '** – ' + actualText + '\n');
-            }
-
             const constructedEmbed = new discord.RichEmbed();
             constructedEmbed.setColor('BLUE');
-            constructedEmbed.addField(selectedUser.choiceTitle, choiceList);
+            constructedEmbed.setTitle(selectedUser.choiceTitle);
+
+            const entryPerField = 5;
+            const fieldCount = Math.ceil(selectedUser.choiceTexts.length / entryPerField);
+            for (i = 0; i < fieldCount; i++) {
+                var message = '';
+
+                for (j = i * entryPerField; j < Math.min(selectedUser.choiceTexts.length, (i + 1) * entryPerField); j++) {
+                    const actualText = selectedUser.choiceTexts[j];
+
+                    message = message.concat('**#' + (j + 1) + '** - ' + actualText + '\n');
+                }
+
+                constructedEmbed.addField('Entries ' + (i * entryPerField) + '..' + Math.min(selectedUser.choiceTexts.length, (i + 1) * entryPerField), message);
+            }
+
             constructedEmbed.setFooter('You can choose with "' + prefix + 'choice choose [1-' + selectedUser.data.length + ']" or cancel with "' + prefix + 'choice cancel"');
 
             channel.send(constructedEmbed);
