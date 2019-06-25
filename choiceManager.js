@@ -28,7 +28,7 @@ module.exports = function() {
             const constructedEmbed = new discord.RichEmbed();
             constructedEmbed.setColor('BLUE');
             constructedEmbed.addField(selectedUser.choiceTitle, choiceList);
-            constructedEmbed.setFooter('To cancel this choice, type "' + prefix + 'choice cancel"');
+            constructedEmbed.setFooter('You can choose with "' + prefix + 'choice choose [1-' + selectedUser.data.length + ']" or cancel with "' + prefix + 'choice cancel"');
 
             channel.send(constructedEmbed);
 
