@@ -22,10 +22,14 @@ var Utils = {
         channel.send(constructedEmbed);
     },
     
-    sendConfirmation: function(channel, message, title = 'Confirmation') {
+    sendConfirmation: function(channel, message, title = 'Confirmation', footer) {
         const constructedEmbed = new Discord.RichEmbed();
         constructedEmbed.setColor('BLUE');
         constructedEmbed.addField(title, message);
+
+        if (footer) {
+            constructedEmbed.setFooter(footer);
+        }
     
         channel.send(constructedEmbed);
     },

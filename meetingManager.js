@@ -118,6 +118,21 @@ module.exports = function() {
         });
     }
 
+    this.modifyMeetingName = function(stuff, id, name) {
+        return new Promise(function(resolve, reject) {
+            stuff.dbObjects.UpcomingMeetings.update(
+                {name: name},
+                {where: {id: id}}
+            ).then(result => {
+                if (result[0] > 0) {
+                    resolve(name);
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
     this.modifyMeetingDate = function(stuff, id, startDate, endDate) {
         return new Promise(function(resolve, reject) {
             stuff.dbObjects.UpcomingMeetings.update({
