@@ -44,7 +44,7 @@ module.exports = {
                                     stuff.utils.sendError(stuff.message.channel, 'Unable to get GPS data from this place.')
                                 }
                             }));
-                            stuff.choiceMan.sendChoicesToChannel(stuff.discord, stuff.message.channel, stuff.prefix, stuff.message.author.id);
+                            stuff.choiceMan.sendChoicesToChannel(stuff.discord, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
                         }
                     } else {
                         stuff.utils.sendError(stuff.message.channel, 'No place found for query "' + stuff.args[1] + '"');

@@ -18,7 +18,7 @@ module.exports = {
 
             console.log(tst);
         } else if (stuff.args[0] == 'list') {
-            const rep = stuff.choiceMan.sendChoicesToChannel(stuff.discord, stuff.message.channel, stuff.prefix, stuff.message.author.id);
+            const rep = stuff.choiceMan.sendChoicesToChannel(stuff.discord, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
             if (rep != true) {
                 stuff.utils.sendError(stuff.message.channel, rep);
             }

@@ -3,15 +3,34 @@ module.exports = {
     description: 'Meeting list',
     
 	execute(stuff) {
-        if (!stuff.args[0] || stuff.args[0] == 'asc' || stuff.args[0] == 'desc') {
-            stuff.dbObjects.UpcomingMeetings.findAll({
-                limit: 10,
-                order: [[stuff.dbObjects.sequelize.col('start_time'), stuff.args[0] == 'desc' ? 'DESC' : 'ASC']]
-            }).then(upcomingMeetings => {
-                stuff.meetingMan.sendSearchResult(stuff, upcomingMeetings, 'Upcoming meeting list', stuff.args[0] == 'desc' ? 'Sorted from descending order' : 'Sorted from ascending order');
-            });
-        } else {
-            stuff.utils.sendUsage(stuff.message.channel, this.name, '_(asc/desc)_');
+        var isDesc = false;
+        var page = 0;
+        if (stuff.args.length >= 1) {
+            const parsedPage = parseInt(stuff.args[0]);
+
+            if (!isNaN(parsedPage) && parsedPage > 0) {
+                page = parsedPage - 1;
+            } else {
+                stuff.utils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[0] + '**');
+                return;
+            }
         }
+
+        if (stuff.args.length >= 2) {
+            if (stuff.args[1].toLowerCase() == 'true') {
+                isDesc = true;
+            } else if (stuff.args[1].toLowerCase() != 'false') {
+                stuff.utils.sendError(stuff.message.channel, 'Invalid input: The second argument must be either _true_ or _false_');
+                return;
+            }
+        }
+
+        stuff.dbObjects.UpcomingMeetings.findAndCountAll({
+            offset: page * stuff.config.search_limit,
+            limit: stuff.config.search_limit,
+            order: [[stuff.dbObjects.sequelize.col('start_time'), isDesc ? 'DESC' : 'ASC']]
+        }).then(result => {
+            stuff.meetingMan.sendSearchResult(stuff, result.rows, 'Upcoming meeting list', stuff.args[0] == 'desc' ? 'Sorted from descending order' : 'Sorted from ascending order', result.count, page + 1);
+        });
 	},
 };

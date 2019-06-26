@@ -81,6 +81,7 @@ for (const file of commandFiles) {
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
+  delete config.token;
 });
 
 client.on('message', message => {
@@ -136,8 +137,7 @@ client.on('message', message => {
             choiceMan: choiceMan,
             meetingMan: meetingMan,
             choice: choice,
-            prefix: config.prefix,
-            locale: config.locale});
+            config: config});
     } catch (error) {
         console.error(error);
         sendError(message.channel, "An error occured while executing this command.")
