@@ -231,6 +231,21 @@ module.exports = function() {
         });
     }
 
+    this.modifyMeetingLimit = function(stuff, id, limit) {
+        return new Promise(function(resolve, reject) {
+            stuff.dbObjects.UpcomingMeetings.update(
+                {join_limit: limit},
+                {where: {id: id}}
+            ).then(result => {
+                if (result[0] > 0) {
+                    resolve(limit);
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
     this.hasUserJoinedMeeting = function(stuff, userId, meetingId) {
         return new Promise((resolve, reject) => {
             stuff.dbObjects.JoinedMeetings.count({

@@ -87,8 +87,15 @@ module.exports = {
                 .catch(function(errorMessage) {
                     stuff.utils.sendError(stuff.message.channel, errorMessage);
                 });
+        } else if (stuff.args[1] == 'limit') {
+            const parsedLimit = parseInt(stuff.args[2]);
+            if (!isNaN(parsedLimit) && parsedLimit >= 0) {
+                module.exports.modifyLimit(stuff, id, parsedLimit, ownerOverriden)
+            } else {
+                stuff.utils.sendError(stuff.message.channel, 'Invalid join limit: **' + stuff.args[2] + '**');
+            }
         } else {
-            stuff.utils.sendUsage(stuff.message.channel, this.name + ' ' + stuff.args[0], '[name/date/location] [query]');
+            stuff.utils.sendUsage(stuff.message.channel, this.name + ' ' + stuff.args[0], '[name/date/location/limit] [query]');
         }
     },
 
@@ -127,6 +134,18 @@ module.exports = {
             })
             .catch(function(e) {
                 stuff.utils.sendError(stuff.message.channel, 'Unable to modify the location of Meeting #' + id + '.');
+                console.log(e);
+            });
+    },
+
+    modifyLimit(stuff, id, limit, ownerOverriden) {
+        stuff.meetingMan.modifyMeetingLimit(stuff, id, limit)
+            .then(function(response) {
+                var message = response == 0 ? 'Join limit removed' : 'New join limit: **' + response + '**';
+                stuff.utils.sendConfirmation(stuff.message.channel, message, 'Join limit modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
+            })
+            .catch(function(e) {
+                stuff.utils.sendError(stuff.message.channel, 'Unable to modify the join limit of Meeting #' + id + '.');
                 console.log(e);
             });
     },
