@@ -13,6 +13,61 @@ const meetingMan = new MeetingManager();
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
+var Utils = {
+    sendError: function(channel, message, title = 'Error') {
+        const constructedEmbed = new Discord.RichEmbed();
+        constructedEmbed.setColor('RED');
+        constructedEmbed.addField(title, message);
+    
+        channel.send(constructedEmbed);
+    },
+    
+    sendConfirmation: function(channel, message, title = 'Confirmation') {
+        const constructedEmbed = new Discord.RichEmbed();
+        constructedEmbed.setColor('BLUE');
+        constructedEmbed.addField(title, message);
+    
+        channel.send(constructedEmbed);
+    },
+    
+    sendUsage: function(channel, command, message) {
+        const constructedEmbed = new Discord.RichEmbed();
+        constructedEmbed.setColor('ORANGE');
+        
+        if (Array.isArray(message)) {
+            var genText = '';
+            for (i = 0; i < message.length; i++) {
+                genText = genText.concat('**' + config.prefix + command + '** ' + message[i] + '\n');
+            }
+    
+            constructedEmbed.addField('Usage', genText);
+        } else {
+            constructedEmbed.addField('Usage', '**' + config.prefix + command + '** ' + message);
+        }
+    
+        channel.send(constructedEmbed);
+    },
+
+    formatDate: function(startDate, endDate) {
+        var dateStr = '';
+        if (endDate) {
+            if (startDate.getFullYear() == endDate.getFullYear() && startDate.getMonth() == endDate.getMonth() && startDate.getDate() == endDate.getDate()) {
+                dateStr = startDate.toLocaleString(config.locale, {day: '2-digit', month: 'long', year: 'numeric'}).concat('\n');
+                dateStr = dateStr.concat(startDate.toLocaleString(config.locale, {hour: '2-digit', minute: '2-digit'}));
+                dateStr = dateStr.concat(' - ' + endDate.toLocaleString(config.locale, {hour: '2-digit', minute: '2-digit'}));
+            } else {
+                dateStr = startDate.toLocaleString(config.locale, {day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'}).concat('\n');
+                dateStr = dateStr.concat('**To** ' + endDate.toLocaleString(config.locale, {day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'}));
+            }
+        } else {
+            dateStr = startDate.toLocaleString(config.locale, {day: '2-digit', month: 'long', year: 'numeric'}).concat('\n');
+            dateStr = dateStr.concat(startDate.toLocaleString(config.locale, {hour: '2-digit', minute: '2-digit'}));
+        }
+
+        return dateStr;
+    }
+};
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -61,7 +116,10 @@ client.on('message', message => {
         }
     }
 
-	if (!client.commands.has(command)) return;
+	if (!client.commands.has(command)) {
+        console.log('unknown command!');
+        return;
+    }
 
     try {
         client.commands.get(command).execute({message: message,
@@ -69,8 +127,7 @@ client.on('message', message => {
             dbObjects: dbObjects,
             chronode: chronode,
             request: request,
-            sendError: sendError,
-            sendUsage: sendUsage,
+            utils: Utils,
             discord: Discord,
             choiceMan: choiceMan,
             meetingMan: meetingMan,
@@ -82,31 +139,5 @@ client.on('message', message => {
         sendError(message.channel, "An error occured while executing this command.")
     }
 });
-
-function sendError(channel, message) {
-    const constructedEmbed = new Discord.RichEmbed();
-    constructedEmbed.setColor('RED');
-    constructedEmbed.addField('Error', message);
-
-    channel.send(constructedEmbed);
-}
-
-function sendUsage(channel, command, message) {
-    const constructedEmbed = new Discord.RichEmbed();
-    constructedEmbed.setColor('ORANGE');
-    
-    if (Array.isArray(message)) {
-        var genText = '';
-        for (i = 0; i < message.length; i++) {
-            genText = genText.concat('**' + config.prefix + command + '** ' + message[i] + '\n');
-        }
-
-        constructedEmbed.addField('Usage', genText);
-    } else {
-        constructedEmbed.addField('Usage', '**' + config.prefix + command + '** ' + message);
-    }
-
-    channel.send(constructedEmbed);
-}
 
 client.login(config.token);

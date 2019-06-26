@@ -17,14 +17,14 @@ module.exports = {
                         stuff.meetingMan.sendSearchResult(stuff, searchResults, 'Search by location - "' + stuff.args[1] + '"');
                     });
                 } else {
-                    stuff.sendUsage(stuff.message.channel, this.name + ' search location', '[location]');
+                    stuff.utils.sendUsage(stuff.message.channel, this.name + ' search location', '[location]');
                 }
             } else if (stuff.args[0] == 'day') {
                 if (stuff.args.length >= 2) {
                     const chronoRes = stuff.chronode.parse(stuff.args[1]);
 
                     if (chronoRes.length == 0) {
-                        stuff.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[1] + '"');
+                        stuff.utils.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[1] + '"');
                         return;
                     }
 
@@ -47,7 +47,7 @@ module.exports = {
                         stuff.meetingMan.sendSearchResult(stuff, searchResults, 'Search by day - ' + queryDate.toLocaleDateString(stuff.locale));
                     });
                 } else {
-                    stuff.sendUsage(stuff.message.channel, this.name + ' search day', '[date]');
+                    stuff.utils.sendUsage(stuff.message.channel, this.name + ' search day', '[date]');
                 }
             } else if (stuff.args[0] == 'owner') {
                 if (stuff.args.length >= 2) {
@@ -62,7 +62,7 @@ module.exports = {
                         stuff.meetingMan.sendSearchResult(stuff, searchResults, 'Search by owner - @' + stuff.message.mentions.members.first().user.tag);
                     });
                 } else {
-                    stuff.sendUsage(stuff.message.channel, this.name + ' search owner', '[owner mention]');
+                    stuff.utils.sendUsage(stuff.message.channel, this.name + ' search owner', '[owner mention]');
                 }
             } else if (stuff.args[0] == 'name') {
                 if (stuff.args.length >= 2) {
@@ -77,11 +77,11 @@ module.exports = {
                         stuff.meetingMan.sendSearchResult(stuff, searchResults, 'Search by name - "' + stuff.args[1] + '"');
                     });
                 } else {
-                    stuff.sendUsage(stuff.message.channel, this.name + ' search name', '[meeting name]');
+                    stuff.utils.sendUsage(stuff.message.channel, this.name + ' search name', '[meeting name]');
                 }
             }
         } else {
-            stuff.sendUsage(stuff.message.channel, this.name, '[location/day/owner/name]');
+            stuff.utils.sendUsage(stuff.message.channel, this.name, '[location/day/owner/name]');
         }
 	},
 };

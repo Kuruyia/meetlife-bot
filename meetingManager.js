@@ -59,19 +59,22 @@ module.exports = function() {
                 const data = result.dataValues;
                 const constructedEmbed = new stuff.discord.RichEmbed();
                 constructedEmbed.setColor('BLUE');
-                constructedEmbed.setTitle('Meeting #' + data.id + ': ' + data.name);
+                constructedEmbed.setTitle('📅   Meeting #' + data.id + ': ' + data.name);
                 constructedEmbed.setURL('http://www.google.com/maps/place/' + data.latitude + ',' + data.longitude);
 
-                var dateStr = new Date(data.start_time * 1000).toLocaleString(stuff.locale);
                 if (data.end_time) {
-                    dateStr = dateStr.concat(' - ' + new Date(data.end_time * 1000).toLocaleString(stuff.locale));
+                    var startDate = new Date(data.start_time * 1000);
+                    var endDate = new Date(data.end_time * 1000);
+                    constructedEmbed.addField('Date', stuff.utils.formatDate(startDate, endDate), true);
+                } else {
+                    var startDate = new Date(data.start_time * 1000);
+                    constructedEmbed.addField('Date', stuff.utils.formatDate(startDate), true);
                 }
-                constructedEmbed.addField('Date', dateStr, true);
 
                 constructedEmbed.addField('Owner', '<@' + data.owner_id + '>', true)
 
                 if (data.location_name_short) {
-                    constructedEmbed.addField('Location', data.location_name_short + '\n' + data.latitude + ', ' + data.longitude);
+                    constructedEmbed.addField('Location', '**' + data.location_name_short + '**\n' + data.latitude + ', ' + data.longitude);
                 } else {
                     constructedEmbed.addField('Location', data.latitude + ', ' + data.longitude);
                 }
@@ -82,7 +85,7 @@ module.exports = function() {
                     stuff.message.channel.send(constructedEmbed);
                 }
             } else {
-                stuff.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
             }
         });
     }
@@ -115,7 +118,59 @@ module.exports = function() {
         });
     }
 
-    this.modifyMeetingLocation = function(id, longitude, latitude, location_name, location_name_short) {
-        return false;
+    this.modifyMeetingDate = function(stuff, id, startDate, endDate) {
+        return new Promise(function(resolve, reject) {
+            stuff.dbObjects.UpcomingMeetings.update({
+                start_time: startDate,
+                end_time: endDate
+            },
+            {
+                where: {
+                    id: id
+                }
+            }).then(result => {
+                if (result[0] > 0) {
+                    resolve({startDate: startDate,
+                        endDate: endDate});
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
+    this.modifyMeetingLocation = function(stuff, id, feature) {
+        var locationLabel, locationName;
+        if (feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('geocoding')) {
+            if (feature.properties.geocoding.hasOwnProperty('label')) {
+                locationLabel = feature.properties.geocoding.label;
+            }
+            if (feature.properties.geocoding.hasOwnProperty('name')) {
+                locationName = feature.properties.geocoding.name;
+            }
+        }
+
+        return new Promise(function(resolve, reject) {
+            stuff.dbObjects.UpcomingMeetings.update({
+                longitude: feature.geometry.coordinates[0],
+                latitude: feature.geometry.coordinates[1],
+                location_name: locationLabel,
+                location_name_short: locationName
+            },
+            {
+                where: {
+                    id: id
+                }
+            }).then(result => {
+                if (result[0] > 0) {
+                    resolve({longitude: feature.geometry.coordinates[0],
+                        latitude: feature.geometry.coordinates[1],
+                        label: locationLabel,
+                        name: locationName});
+                } else {
+                    reject();
+                }
+            });
+        });
     }
 }

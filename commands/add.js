@@ -7,7 +7,7 @@ module.exports = {
             const chronoRes = stuff.chronode.parse(stuff.args[2]);
         
             if (chronoRes.length == 0) {
-                stuff.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[2] + '"');
+                stuff.utils.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[2] + '"');
                 return;
             }
         
@@ -26,7 +26,7 @@ module.exports = {
                             if (actualFeature.hasOwnProperty('geometry') && actualFeature.geometry.hasOwnProperty('coordinates')) {  
                                 stuff.meetingMan.addMeeting(stuff, stuff.args[0], actualFeature, startDate, endDate, stuff.message.author.id, 0);
                             } else {
-                                stuff.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.channel, 'Unable to get GPS data from this place.')
+                                stuff.utils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.channel, 'Unable to get GPS data from this place.')
                             }
                         } else {
                             var choiceTexts = [];
@@ -41,20 +41,20 @@ module.exports = {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {  
                                     stuff.meetingMan.addMeeting(stuff, stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, 0);
                                 } else {
-                                    stuff.sendError(stuff.message.channel, 'Unable to get GPS data from this place.')
+                                    stuff.utils.sendError(stuff.message.channel, 'Unable to get GPS data from this place.')
                                 }
                             }));
                             stuff.choiceMan.sendChoicesToChannel(stuff.discord, stuff.message.channel, stuff.prefix, stuff.message.author.id);
                         }
                     } else {
-                        stuff.sendError(stuff.message.channel, 'No place found for query "' + stuff.args[1] + '"');
+                        stuff.utils.sendError(stuff.message.channel, 'No place found for query "' + stuff.args[1] + '"');
                     } 
                 })
                 .catch(function(errorMessage) {
-                    stuff.sendError(stuff.message.channel, errorMessage);
+                    stuff.utils.sendError(stuff.message.channel, errorMessage);
                 });
         } else {
-            stuff.sendUsage(stuff.message.channel, this.name, '[name] [location] [start _(and end)_ date]');
+            stuff.utils.sendUsage(stuff.message.channel, this.name, '[name] [location] [start _(and end)_ date]');
         }
 	},
 };

@@ -11,7 +11,7 @@ module.exports = {
                 stuff.meetingMan.sendSearchResult(stuff, upcomingMeetings, 'Upcoming meeting list', stuff.args[0] == 'desc' ? 'Sorted from descending order' : 'Sorted from ascending order');
             });
         } else {
-            stuff.sendUsage(stuff.message.channel, this.name, '_(asc/desc)_');
+            stuff.utils.sendUsage(stuff.message.channel, this.name, '_(asc/desc)_');
         }
 	},
 };

@@ -32,21 +32,21 @@ module.exports = {
 
                                     stuff.message.channel.send(constructedEmbed);
                                 } else {
-                                    stuff.sendError(stuff.message.channel, 'This meeting could not be deleted.');
+                                    stuff.utils.sendError(stuff.message.channel, 'This meeting could not be deleted.');
                                 }
                             });
                         } else {
-                            stuff.sendError(stuff.message.channel, 'You can\'t delete this meeting because you don\'t own it.');
+                            stuff.utils.sendError(stuff.message.channel, 'You can\'t delete this meeting because you don\'t own it.');
                         }
                     } else {
-                        stuff.sendError(stuff.message.channel, 'Invalid meeting id.');
+                        stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
                     }
                 });
             } else {
-                stuff.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
             }
         } else {
-            stuff.sendUsage(stuff.message.channel, this.name, '[meeting id]');
+            stuff.utils.sendUsage(stuff.message.channel, this.name, '[meeting id]');
         }
 	},
 };

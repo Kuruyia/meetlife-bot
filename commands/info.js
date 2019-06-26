@@ -8,10 +8,10 @@ module.exports = {
             if (!isNaN(meetingId)) {
                 stuff.meetingMan.sendInfoPanel(stuff, meetingId);
             } else {
-                stuff.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
             }
         } else {
-            stuff.sendUsage(stuff.message.channel, this.name, '[meeting id]');
+            stuff.utils.sendUsage(stuff.message.channel, this.name, '[meeting id]');
         }
 	},
 };
