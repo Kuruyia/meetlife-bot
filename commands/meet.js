@@ -123,7 +123,7 @@ module.exports = {
                                 }
                             }
                         }).then(searchResults => {
-                            module.exports.sendSearchResult(stuff, searchResults, 'Search by day - ' + queryDate.toLocaleDateString('en-GB'));
+                            module.exports.sendSearchResult(stuff, searchResults, 'Search by day - ' + queryDate.toLocaleDateString(stuff.locale));
                         });
                     } else {
                         stuff.sendUsage(stuff.message.channel, this.name + ' search day', '[date]');
@@ -162,8 +162,19 @@ module.exports = {
             } else {
                 stuff.sendUsage(stuff.message.channel, this.name + ' search', '[location/day/owner/name]');
             }
+        } else if (stuff.args[0] == 'info') {
+            if (stuff.args.length >= 2) {
+                const meetingId = parseInt(stuff.args[1]);
+                if (!isNaN(meetingId)) {
+                    module.exports.sendInfoPanel(stuff, meetingId);
+                } else {
+                    stuff.sendError(stuff.message.channel, 'Invalid meeting id.');
+                }
+            } else {
+                stuff.sendUsage(stuff.message.channel, this.name + ' info', '[meeting id]');
+            }
         } else if (stuff.args.length == 0) {
-            stuff.sendUsage(stuff.message.channel, this.name, ['add [name] [location] [start _(and end)_ date]', 'list _(asc/desc)_', 'search [location/day/owner/name]']);
+            stuff.sendUsage(stuff.message.channel, this.name, ['add [name] [location] [start _(and end)_ date]', 'list _(asc/desc)_', 'search [location/day/owner/name]', 'info [meeting id]']);
         } else {
             stuff.sendError(stuff.message.channel, 'Unknown option: **' + stuff.args[0] + '**');
         }
@@ -183,9 +194,9 @@ module.exports = {
             owner_id: ownerId,
             join_limit: joinLimit,
             location_name: feature.properties.geocoding.label,
-            location_name_short: feature.properties.geocoding.name});
-        
-        stuff.message.reply('ok');
+            location_name_short: feature.properties.geocoding.name}).then(response => {
+                module.exports.sendInfoPanel(stuff, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
+            });
     },
 
     sendSearchResult: function(stuff, result, title, footer) {
@@ -197,7 +208,7 @@ module.exports = {
             var message = '';
             for (i = 0; i < result.length; i++) {
                 const currentMeetingData = result[i].dataValues;
-                message = message.concat('**#' + currentMeetingData.id + '**: ' + currentMeetingData.name + ' - ' + new Date(currentMeetingData.start_time * 1000).toLocaleString('en-GB') + '\n');
+                message = message.concat('**#' + currentMeetingData.id + '**: ' + currentMeetingData.name + ' - ' + new Date(currentMeetingData.start_time * 1000).toLocaleString(stuff.locale) + '\n');
             }
 
             constructedEmbed.addField(title, message);
@@ -212,5 +223,43 @@ module.exports = {
         }
 
         stuff.message.channel.send(constructedEmbed);
+    },
+
+    sendInfoPanel: function(stuff, id, message) {
+        stuff.dbObjects.UpcomingMeetings.findOne({
+            where: {
+                id: id
+            }
+        }).then(result => {
+            if (result) {
+                const data = result.dataValues;
+                const constructedEmbed = new stuff.discord.RichEmbed();
+                constructedEmbed.setColor('BLUE');
+                constructedEmbed.setTitle('Meeting #' + data.id + ': ' + data.name);
+                constructedEmbed.setURL('http://www.google.com/maps/place/' + data.latitude + ',' + data.longitude);
+
+                var dateStr = new Date(data.start_time * 1000).toLocaleString(stuff.locale);
+                if (data.end_time) {
+                    dateStr = dateStr.concat(' - ' + new Date(data.end_time * 1000).toLocaleString(stuff.locale));
+                }
+                constructedEmbed.addField('Date', dateStr, true);
+
+                constructedEmbed.addField('Owner', '<@' + data.owner_id + '>', true)
+
+                if (data.location_name_short) {
+                    constructedEmbed.addField('Location', data.location_name_short + '\n' + data.latitude + ', ' + data.longitude);
+                } else {
+                    constructedEmbed.addField('Location', data.latitude + ', ' + data.longitude);
+                }
+
+                if (message) {
+                    stuff.message.channel.send(message, {embed: constructedEmbed});
+                } else {
+                    stuff.message.channel.send(constructedEmbed);
+                }
+            } else {
+                stuff.sendError(stuff.message.channel, 'Invalid meeting id.');
+            }
+        });
     }
 };

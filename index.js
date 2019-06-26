@@ -72,7 +72,8 @@ client.on('message', message => {
             discord: Discord,
             choiceMan: choiceMan,
             choice: choice,
-            prefix: config.prefix});
+            prefix: config.prefix,
+            locale: config.locale});
     } catch (error) {
         console.error(error);
         sendError(message.channel, "An error occured while executing this command.")
