@@ -81,4 +81,32 @@ module.exports = function() {
             }
         });
     }
+
+    this.searchLocation = function(request, query) {
+        const options = {
+            url: 'https://nominatim.openstreetmap.org/search?q=' + encodeURI(query) + '&format=geocodejson&addressdetails=1',
+            headers: {
+                'User-Agent': 'LifeMeet 0.1'
+            }
+        };
+
+        return new Promise(function(resolve, reject) {
+            request(options, function(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    try {
+                        const responseObj = JSON.parse(body);
+                        resolve(responseObj);
+                    } catch (e) {
+                        reject("Error while parsing response: " + e);
+                    }
+                } else {
+                    if (error) {
+                        reject("An error has occured: " + error.toString());
+                    } else {
+                        reject("An unknown error has occured: HTTP " + response.statusCode.toString());
+                    }
+                }
+            });
+        });
+    }
 }
