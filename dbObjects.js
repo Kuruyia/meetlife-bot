@@ -9,6 +9,15 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 });
 
 const UpcomingMeetings = sequelize.import('models/UpcomingMeetings');
+const JoinedMeetings = sequelize.import('models/JoinedMeetings');
+
+JoinedMeetings.belongsTo(UpcomingMeetings, {
+	foreignKey: {
+		name: 'upcoming_meeting_id',
+		allowNull: false
+	},
+	onDelete: 'CASCADE'
+});
 
 sequelize.sync();
 
