@@ -16,6 +16,17 @@ module.exports = {
             if (chronoRes[0].end) {
                 endDate = chronoRes[0].end.date().getTime() / 1000;
             }
+
+            var joinLimit = 0;
+            if (stuff.args.length >= 4) {
+                const parsedLimit = parseInt(stuff.args[3]);
+                if (!isNaN(parsedLimit) && parsedLimit > 0) {
+                    joinLimit = parsedLimit;
+                } else {
+                    stuff.utils.sendError(stuff.message.channel, 'Invalid join limit: **' + stuff.args[3] + '**');
+                    return;
+                }
+            }
         
             stuff.meetingMan.searchLocation(stuff.request, stuff.args[1])
                 .then(function(json) {
@@ -24,7 +35,7 @@ module.exports = {
                             const actualFeature = json.features[0];
                             
                             if (actualFeature.hasOwnProperty('geometry') && actualFeature.geometry.hasOwnProperty('coordinates')) {  
-                                stuff.meetingMan.addMeeting(stuff, stuff.args[0], actualFeature, startDate, endDate, stuff.message.author.id, 0);
+                                stuff.meetingMan.addMeeting(stuff, stuff.args[0], actualFeature, startDate, endDate, stuff.message.author.id, joinLimit);
                             } else {
                                 stuff.utils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.channel, 'Unable to get GPS data from this place.')
                             }
@@ -39,7 +50,7 @@ module.exports = {
                             
                             stuff.choiceMan.addChoice(stuff.message.author.id, new stuff.choice(json.features.length.toString() + ' matches for query "' + stuff.args[1] + '"', choiceTexts, json.features, function(option, data) {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {  
-                                    stuff.meetingMan.addMeeting(stuff, stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, 0);
+                                    stuff.meetingMan.addMeeting(stuff, stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, joinLimit);
                                 } else {
                                     stuff.utils.sendError(stuff.message.channel, 'Unable to get GPS data from this place.')
                                 }
@@ -54,7 +65,7 @@ module.exports = {
                     stuff.utils.sendError(stuff.message.channel, errorMessage);
                 });
         } else {
-            stuff.utils.sendUsage(stuff.message.channel, this.name, '[name] [location] [start _(and end)_ date]');
+            stuff.utils.sendUsage(stuff.message.channel, this.name, '[name] [location] [start _(and end)_ date] _(join limit)_');
         }
 	},
 };

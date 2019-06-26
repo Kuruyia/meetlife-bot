@@ -1,5 +1,5 @@
 module.exports = function() {
-    this.addMeeting = function(stuff, name, feature, startDate, endDate, ownerId, joinLimit) {
+    this.addMeeting = function(stuff, name, feature, startDate, endDate, ownerId, joinLimit = 0) {
         var locationLabel, locationName;
         if (feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('geocoding')) {
             if (feature.properties.geocoding.hasOwnProperty('label')) {
@@ -207,7 +207,7 @@ module.exports = function() {
     }
 
     this.hasUserJoinedMeeting = function(stuff, userId, meetingId) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             stuff.dbObjects.JoinedMeetings.count({
                 where: {
                     user_id: userId,
@@ -219,20 +219,45 @@ module.exports = function() {
         });
     }
 
+    this.isMeetingFull = function(stuff, meetingId) {
+        return new Promise((resolve, reject) => {
+            stuff.dbObjects.JoinedMeetings.count({
+                where: {
+                    upcoming_meeting_id: meetingId
+                }
+            }).then(joinCount => {
+                stuff.dbObjects.UpcomingMeetings.findOne({
+                    where: {
+                        id: meetingId
+                    }
+                }).then(result => {
+                    const joinLimit = result.dataValues.join_limit;
+                    resolve(joinLimit > 0 && joinCount >= joinLimit);
+                });
+            });
+        });
+    }
+
     this.joinUserToMeeting = function(stuff, userId, meetingId) {
         return new Promise((resolve, reject) => {
             this.hasUserJoinedMeeting(stuff, userId, meetingId).then(hasJoined => {
                 if (!hasJoined) {
-                    stuff.dbObjects.JoinedMeetings.create({
-                        user_id: userId,
-                        upcoming_meeting_id: meetingId
-                    }).then(response => {
-                        resolve();
-                    }).catch(error => {
-                        if (error.name == 'SequelizeForeignKeyConstraintError') {
-                            reject('Invalid meeting id.')
+                    this.isMeetingFull(stuff, meetingId).then(isFull => {
+                        if (!isFull) {
+                            stuff.dbObjects.JoinedMeetings.create({
+                                user_id: userId,
+                                upcoming_meeting_id: meetingId
+                            }).then(response => {
+                                resolve();
+                            }).catch(error => {
+                                if (error.name == 'SequelizeForeignKeyConstraintError') {
+                                    reject('Invalid meeting id.')
+                                } else {
+                                    reject(error);
+                                }
+                            });
                         } else {
-                            reject(error);
+                            reject('This Meeting has reached its participant limit');
                         }
                     });
                 } else {
