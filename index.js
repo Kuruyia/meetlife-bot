@@ -3,11 +3,13 @@ const Discord = require('discord.js');
 const chronode = require('chrono-node');
 const request = require('request');
 const dbObjects = require('./dbObjects');
-const choiceManager = require('./choiceManager');
+const ChoiceManager = require('./choiceManager');
+const MeetingManager = require('./meetingManager');
 const choice = require('./choice')
 const config = require('./config.json');
 
-const choiceMan = new choiceManager();
+const choiceMan = new ChoiceManager();
+const meetingMan = new MeetingManager();
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
@@ -71,6 +73,7 @@ client.on('message', message => {
             sendUsage: sendUsage,
             discord: Discord,
             choiceMan: choiceMan,
+            meetingMan: meetingMan,
             choice: choice,
             prefix: config.prefix,
             locale: config.locale});
