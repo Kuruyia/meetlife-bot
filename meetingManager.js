@@ -1,5 +1,15 @@
 module.exports = function() {
     this.addMeeting = function(stuff, name, feature, startDate, endDate, ownerId, joinLimit) {
+        var locationLabel, locationName;
+        if (feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('geocoding')) {
+            if (feature.properties.geocoding.hasOwnProperty('label')) {
+                locationLabel = feature.properties.geocoding.label;
+            }
+            if (feature.properties.geocoding.hasOwnProperty('name')) {
+                locationName = feature.properties.geocoding.name;
+            }
+        }
+
         stuff.dbObjects.UpcomingMeetings.create({name: name,
             start_time: startDate,
             end_time: endDate,
@@ -7,8 +17,8 @@ module.exports = function() {
             latitude: feature.geometry.coordinates[1],
             owner_id: ownerId,
             join_limit: joinLimit,
-            location_name: feature.properties.geocoding.label,
-            location_name_short: feature.properties.geocoding.name}).then(response => {
+            location_name: locationLabel,
+            location_name_short: locationName}).then(response => {
                 this.sendInfoPanel(stuff, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
             });
     }
@@ -103,5 +113,9 @@ module.exports = function() {
                 }
             });
         });
+    }
+
+    this.modifyMeetingLocation = function(id, longitude, latitude, location_name, location_name_short) {
+        return false;
     }
 }
