@@ -1,13 +1,8 @@
 module.exports = function() {
     this.addMeeting = function(stuff, name, feature, startDate, endDate, ownerId, joinLimit) {
-        endTime = null;
-        if (endDate) {
-            endTime = endDate.date().getTime() / 1000;
-        }
-
         stuff.dbObjects.UpcomingMeetings.create({name: name,
-            start_time: startDate.date().getTime() / 1000,
-            end_time: endTime,
+            start_time: startDate,
+            end_time: endDate,
             longitude: feature.geometry.coordinates[0],
             latitude: feature.geometry.coordinates[1],
             owner_id: ownerId,

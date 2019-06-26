@@ -11,8 +11,11 @@ module.exports = {
                 return;
             }
         
-            const startDate = chronoRes[0].start;
-            const endDate = chronoRes[0].end;
+            const startDate = chronoRes[0].start.date().getTime() / 1000;
+            var endDate;
+            if (chronoRes[0].end) {
+                endDate = chronoRes[0].end.date().getTime() / 1000;
+            }
         
             stuff.meetingMan.searchLocation(stuff.request, stuff.args[1])
                 .then(function(json) {
