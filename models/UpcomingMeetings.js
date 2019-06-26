@@ -1,6 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
 	return sequelize.define('upcoming_meetings', {
-		name: DataTypes.STRING,
+		name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
 		start_time: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
@@ -15,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 		},
 		owner_id: {
-			type: DataTypes.INTEGER,
+			type: DataTypes.STRING,
 			allowNull: false,
 		},
 		join_limit: DataTypes.INTEGER,
