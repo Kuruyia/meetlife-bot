@@ -25,6 +25,18 @@ module.exports = function() {
         });
     }
 
+    this.getMeetingData = function(stuff, id) {
+        return new Promise((resolve, reject) => {
+            stuff.dbObjects.UpcomingMeetings.findOne({
+                where: {
+                    id: id
+                }
+            }).then(result => {
+                resolve(result);
+            });
+        });
+    }
+
     this.sendSearchResult = function(stuff, result, title, footer = null, count = result.length, page = 1) {
         var resultList = [];
         for (i = 0; i < result.length; i++) {
