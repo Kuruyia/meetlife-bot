@@ -10,7 +10,8 @@ module.exports = function() {
             }
         }
 
-        stuff.dbObjects.UpcomingMeetings.create({name: name,
+        stuff.dbObjects.UpcomingMeetings.create({
+            name: name,
             start_time: startDate,
             end_time: endDate,
             longitude: feature.geometry.coordinates[0],
@@ -18,9 +19,10 @@ module.exports = function() {
             owner_id: ownerId,
             join_limit: joinLimit,
             location_name: locationLabel,
-            location_name_short: locationName}).then(response => {
-                this.sendInfoPanel(stuff, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
-            });
+            location_name_short: locationName
+        }).then(response => {
+            this.sendInfoPanel(stuff, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
+        });
     }
 
     this.sendSearchResult = function(stuff, result, title, footer = null, count = result.length, page = 1) {
@@ -199,6 +201,67 @@ module.exports = function() {
                         name: locationName});
                 } else {
                     reject();
+                }
+            });
+        });
+    }
+
+    this.hasUserJoinedMeeting = function(stuff, userId, meetingId) {
+        return new Promise(function(resolve, reject) {
+            stuff.dbObjects.JoinedMeetings.count({
+                where: {
+                    user_id: userId,
+                    upcoming_meeting_id: meetingId
+                }
+            }).then(count => {
+                resolve(count >= 1);
+            });
+        });
+    }
+
+    this.joinUserToMeeting = function(stuff, userId, meetingId) {
+        return new Promise((resolve, reject) => {
+            this.hasUserJoinedMeeting(stuff, userId, meetingId).then(hasJoined => {
+                if (!hasJoined) {
+                    stuff.dbObjects.JoinedMeetings.create({
+                        user_id: userId,
+                        upcoming_meeting_id: meetingId
+                    }).then(response => {
+                        resolve();
+                    }).catch(error => {
+                        if (error.name == 'SequelizeForeignKeyConstraintError') {
+                            reject('Invalid meeting id.')
+                        } else {
+                            reject(error);
+                        }
+                    });
+                } else {
+                    reject('You already have joined this Meeting.');
+                }
+            });
+        });
+    }
+
+    this.leaveUserFromMeeting = function(stuff, userId, meetingId) {
+        return new Promise((resolve, reject) => {
+            this.hasUserJoinedMeeting(stuff, userId, meetingId).then(hasJoined => {
+                if (hasJoined) {
+                    stuff.dbObjects.JoinedMeetings.destroy({
+                        where: {
+                            user_id: userId,
+                            upcoming_meeting_id: meetingId
+                        }
+                    }).then(response => {
+                        resolve();
+                    }).catch(error => {
+                        if (error.name == 'SequelizeForeignKeyConstraintError') {
+                            reject('Invalid meeting id.')
+                        } else {
+                            reject(error);
+                        }
+                    });
+                } else {
+                    reject('You are not in this Meeting.');
                 }
             });
         });
