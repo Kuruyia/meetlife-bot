@@ -33,7 +33,7 @@ module.exports = function() {
                     message = message.concat('**#' + (j + 1) + '** - ' + actualText + '\n');
                 }
 
-                constructedEmbed.addField('Entries ' + (i * entryPerField) + '..' + Math.min(selectedUser.choiceTexts.length, (i + 1) * entryPerField), message);
+                constructedEmbed.addField('Entries ' + (i * entryPerField + 1) + '..' + Math.min(selectedUser.choiceTexts.length, (i + 1) * entryPerField), message);
             }
 
             constructedEmbed.setFooter('You can choose with "' + prefix + 'choice choose [1-' + selectedUser.data.length + ']" or cancel with "' + prefix + 'choice cancel"');
