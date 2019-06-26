@@ -84,12 +84,13 @@ module.exports = function() {
                     constructedEmbed.addField('Location', data.latitude + ', ' + data.longitude, true);
                 }
 
-                this.countMeetingMembers(stuff, data.id).then(memberCount => {
-                    checkAuthorJoined(memberCount);
-                });
+                this.countMeetingMembers(stuff, data.id)
+                    .then(memberCount => {
+                        return Promise.all([memberCount, self.hasUserJoinedMeeting(stuff, stuff.message.author.id, data.id)]);
+                    }).then(result => {
+                        const memberCount = result.shift();
+                        const joined = result.shift();
 
-                function checkAuthorJoined(memberCount) {
-                    self.hasUserJoinedMeeting(stuff, stuff.message.author.id, data.id).then(joined => {
                         var membersText = '';
                         if (joined) {
                             membersText = membersText.concat('**You are in this Meeting**\n');
@@ -102,17 +103,13 @@ module.exports = function() {
                         membersText = membersText.concat(' joined');
     
                         constructedEmbed.addField('Members', membersText, true);
-                        sendMessage();
-                    });
-                }
 
-                function sendMessage() {
-                    if (message) {
-                        stuff.message.channel.send(message, {embed: constructedEmbed});
-                    } else {
-                        stuff.message.channel.send(constructedEmbed);
-                    }
-                }
+                        if (message) {
+                            stuff.message.channel.send(message, {embed: constructedEmbed});
+                        } else {
+                            stuff.message.channel.send(constructedEmbed);
+                        }
+                    });
             } else {
                 stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
             }
@@ -273,57 +270,77 @@ module.exports = function() {
         });
     }
 
+    this.doesMeetingExists = function(stuff, meetingId) {
+        return new Promise((resolve, reject) => {
+            stuff.dbObjects.UpcomingMeetings.count({
+                where: {
+                    id: meetingId
+                }
+            }).then(response => {
+                resolve(response > 0);
+            });
+        });
+    }
+
     this.joinUserToMeeting = function(stuff, userId, meetingId) {
         return new Promise((resolve, reject) => {
-            this.hasUserJoinedMeeting(stuff, userId, meetingId).then(hasJoined => {
-                if (!hasJoined) {
-                    this.isMeetingFull(stuff, meetingId).then(isFull => {
-                        if (!isFull) {
-                            stuff.dbObjects.JoinedMeetings.create({
-                                user_id: userId,
-                                upcoming_meeting_id: meetingId
-                            }).then(response => {
-                                resolve();
-                            }).catch(error => {
-                                if (error.name == 'SequelizeForeignKeyConstraintError') {
-                                    reject('Invalid meeting id.')
-                                } else {
-                                    reject(error);
-                                }
-                            });
-                        } else {
-                            reject('This Meeting has reached its participant limit');
-                        }
-                    });
-                } else {
-                    reject('You already have joined this Meeting.');
-                }
-            });
+            this.doesMeetingExists(stuff, meetingId)
+                .then(exists => {
+                    if (exists) {
+                        return this.hasUserJoinedMeeting(stuff, userId, meetingId);
+                    } else {
+                        throw 'This Meeting does not exist.';
+                    }
+                }).then(hasJoined => {
+                    if (!hasJoined) {
+                        return this.isMeetingFull(stuff, meetingId);
+                    } else {
+                        throw 'You already have joined this Meeting.';
+                    }
+                }).then(isFull => {
+                    if (!isFull) {
+                        stuff.dbObjects.JoinedMeetings.create({
+                            user_id: userId,
+                            upcoming_meeting_id: meetingId
+                        }).then(response => {
+                            resolve();
+                        }).catch(error => {
+                            reject(error);
+                        });
+                    } else {
+                        throw 'This Meeting has reached its participant limit';
+                    }
+                }).catch(e => {
+                    reject(e);
+                });
         });
     }
 
     this.leaveUserFromMeeting = function(stuff, userId, meetingId) {
         return new Promise((resolve, reject) => {
-            this.hasUserJoinedMeeting(stuff, userId, meetingId).then(hasJoined => {
-                if (hasJoined) {
-                    stuff.dbObjects.JoinedMeetings.destroy({
-                        where: {
-                            user_id: userId,
-                            upcoming_meeting_id: meetingId
-                        }
-                    }).then(response => {
-                        resolve();
-                    }).catch(error => {
-                        if (error.name == 'SequelizeForeignKeyConstraintError') {
-                            reject('Invalid meeting id.')
-                        } else {
-                            reject(error);
-                        }
-                    });
-                } else {
-                    reject('You are not in this Meeting.');
-                }
-            });
+            this.doesMeetingExists(stuff, meetingId)
+                .then(exists => {
+                    if (exists) {
+                        return this.hasUserJoinedMeeting(stuff, userId, meetingId);
+                    } else {
+                        throw 'This Meeting does not exist.';
+                    }
+                }).then(hasJoined => {
+                    if (hasJoined) {
+                        return stuff.dbObjects.JoinedMeetings.destroy({
+                            where: {
+                                user_id: userId,
+                                upcoming_meeting_id: meetingId
+                            }
+                        });
+                    } else {
+                        throw 'You are not in this Meeting.';
+                    }
+                }).then(result => {
+                    resolve();
+                }).catch(e => {
+                    reject(e);
+                });
         });
     }
 }
