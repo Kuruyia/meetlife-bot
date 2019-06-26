@@ -74,6 +74,7 @@ module.exports = function() {
         }).then(result => {
             if (result) {
                 const data = result.dataValues;
+                const self = this;
                 const constructedEmbed = new stuff.discord.RichEmbed();
                 constructedEmbed.setColor('BLUE');
                 constructedEmbed.setTitle('📅   Meeting #' + data.id + ': ' + data.name);
@@ -91,15 +92,39 @@ module.exports = function() {
                 constructedEmbed.addField('Owner', '<@' + data.owner_id + '>', true)
 
                 if (data.location_name_short) {
-                    constructedEmbed.addField('Location', '**' + data.location_name_short + '**\n' + data.latitude + ', ' + data.longitude);
+                    constructedEmbed.addField('Location', '**' + data.location_name_short + '**\n' + data.latitude + ', ' + data.longitude, true);
                 } else {
-                    constructedEmbed.addField('Location', data.latitude + ', ' + data.longitude);
+                    constructedEmbed.addField('Location', data.latitude + ', ' + data.longitude, true);
                 }
 
-                if (message) {
-                    stuff.message.channel.send(message, {embed: constructedEmbed});
-                } else {
-                    stuff.message.channel.send(constructedEmbed);
+                this.countMeetingMembers(stuff, data.id).then(memberCount => {
+                    checkAuthorJoined(memberCount);
+                });
+
+                function checkAuthorJoined(memberCount) {
+                    self.hasUserJoinedMeeting(stuff, stuff.message.author.id, data.id).then(joined => {
+                        var membersText = '';
+                        if (joined) {
+                            membersText = membersText.concat('**You are in this Meeting**\n');
+                        }
+
+                        membersText = membersText.concat(memberCount);
+                        if (data.join_limit > 0) {
+                            membersText = membersText.concat('/' + data.join_limit);
+                        }
+                        membersText = membersText.concat(' joined');
+    
+                        constructedEmbed.addField('Members', membersText, true);
+                        sendMessage();
+                    });
+                }
+
+                function sendMessage() {
+                    if (message) {
+                        stuff.message.channel.send(message, {embed: constructedEmbed});
+                    } else {
+                        stuff.message.channel.send(constructedEmbed);
+                    }
                 }
             } else {
                 stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
@@ -219,13 +244,21 @@ module.exports = function() {
         });
     }
 
-    this.isMeetingFull = function(stuff, meetingId) {
+    this.countMeetingMembers = function(stuff, meetingId) {
         return new Promise((resolve, reject) => {
             stuff.dbObjects.JoinedMeetings.count({
                 where: {
                     upcoming_meeting_id: meetingId
                 }
             }).then(joinCount => {
+                resolve(joinCount);
+            });
+        });
+    }
+
+    this.isMeetingFull = function(stuff, meetingId) {
+        return new Promise((resolve, reject) => {
+            this.countMeetingMembers(stuff, meetingId).then(joinCount => {
                 stuff.dbObjects.UpcomingMeetings.findOne({
                     where: {
                         id: meetingId
