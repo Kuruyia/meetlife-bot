@@ -14,7 +14,7 @@ module.exports = function() {
             join_limit: joinLimit,
             location_name: feature.properties.geocoding.label,
             location_name_short: feature.properties.geocoding.name}).then(response => {
-                module.exports.sendInfoPanel(stuff, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
+                this.sendInfoPanel(stuff, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
             });
     }
 
