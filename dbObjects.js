@@ -21,4 +21,4 @@ JoinedMeetings.belongsTo(UpcomingMeetings, {
 
 sequelize.sync();
 
-module.exports = {sequelize, seqOp, UpcomingMeetings};
+module.exports = {sequelize, seqOp, UpcomingMeetings, JoinedMeetings};
