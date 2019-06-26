@@ -26,44 +26,19 @@ module.exports = function() {
     }
 
     this.sendSearchResult = function(stuff, result, title, footer = null, count = result.length, page = 1) {
-        const constructedEmbed = new stuff.discord.RichEmbed();
-        const maxPage = Math.ceil(count / stuff.config.search_limit);
-        
-        if (result.length > 0) {
-            constructedEmbed.setColor('BLUE');
+        var resultList = [];
+        for (i = 0; i < result.length; i++) {
+            const currentMeetingData = result[i].dataValues;
+            const startTime = new Date(currentMeetingData.start_time * 1000);
 
             var message = '';
-            for (i = 0; i < result.length; i++) {
-                const currentMeetingData = result[i].dataValues;
-                const startTime = new Date(currentMeetingData.start_time * 1000);
-                message = message.concat('**#' + currentMeetingData.id + ' - ' + currentMeetingData.name + '** ');
-                message = message.concat(currentMeetingData.location_name_short + ', ' + startTime.toLocaleDateString(stuff.config.locale) + ' ' + startTime.toLocaleTimeString(stuff.config.locale, {hour: '2-digit', minute: '2-digit'}) + '\n');
-            }
+            message = message.concat('**#' + currentMeetingData.id + ' - ' + currentMeetingData.name + '** ');
+            message = message.concat(currentMeetingData.location_name_short + ', ' + startTime.toLocaleDateString(stuff.config.locale) + ' ' + startTime.toLocaleTimeString(stuff.config.locale, {hour: '2-digit', minute: '2-digit'}));
 
-            var footerText = '';
-            if (footer) {
-                footerText = footerText.concat(footer + ' - ')
-            }
-            footerText = footerText.concat(count + (count > 1 ? ' results' : ' result'));
-            if (count != result.length) {
-                footerText = footerText.concat(', ' + result.length + ' shown');
-
-                title = title.concat(' [' + page + '/' + maxPage + ']');
-            }
-
-            constructedEmbed.addField(title, message);
-            constructedEmbed.setFooter(footerText);
-        } else {
-            constructedEmbed.setColor('RED');
-
-            if (page > maxPage) {
-                constructedEmbed.addField(title, 'This page does not exist. (Max. **' + maxPage + '**)');
-            } else {
-                constructedEmbed.addField(title, 'No result found.');
-            }
+            resultList.push(message);
         }
 
-        stuff.message.channel.send(constructedEmbed);
+        stuff.utils.sendPagedList(stuff.message.channel, resultList, title, footer, count, page);
     }
     
     this.sendInfoPanel = function(stuff, id, message) {

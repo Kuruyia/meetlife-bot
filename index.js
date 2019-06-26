@@ -52,6 +52,44 @@ var Utils = {
         channel.send(constructedEmbed);
     },
 
+    sendPagedList: function(channel, textList, title, footer = null, count = textList.length, page = 1) {
+        const constructedEmbed = new Discord.RichEmbed();
+        const maxPage = Math.ceil(count / config.search_limit);
+        
+        if (textList.length > 0) {
+            constructedEmbed.setColor('BLUE');
+
+            var message = '';
+            for (i = 0; i < textList.length; i++) {
+                message = message.concat(textList[i] + '\n');
+            }
+
+            var footerText = '';
+            if (footer) {
+                footerText = footerText.concat(footer + ' - ')
+            }
+            footerText = footerText.concat(count + (count > 1 ? ' results' : ' result'));
+            if (count != textList.length) {
+                footerText = footerText.concat(', ' + textList.length + ' shown');
+
+                title = title.concat(' [' + page + '/' + maxPage + ']');
+            }
+
+            constructedEmbed.addField(title, message);
+            constructedEmbed.setFooter(footerText);
+        } else {
+            constructedEmbed.setColor('RED');
+
+            if (page > maxPage) {
+                constructedEmbed.addField(title, 'This page does not exist. (Max. **' + maxPage + '**)');
+            } else {
+                constructedEmbed.addField(title, 'No result found.');
+            }
+        }
+
+        channel.send(constructedEmbed);
+    },
+
     formatDate: function(startDate, endDate) {
         var dateStr = '';
         if (endDate) {
