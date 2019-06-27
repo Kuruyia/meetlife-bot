@@ -116,6 +116,24 @@ module.exports = function() {
         });
     }
 
+    this.sendMeetingMembersPanel = function(stuff, client, meetingId, page = 0) {
+        this.getUsersInMeeting(stuff, meetingId, stuff.config.search_limit, stuff.config.search_limit * page)
+            .then(result => {
+                if (result.count > 0) {
+                    var textList = [];
+                    for (i = 0; i < result.users.length; i++) {
+                        textList.push('<@' + result.users[i] + '>');
+                    }
+
+                    stuff.utils.sendPagedList(stuff.message.channel, textList, 'Members in Meeting #' + meetingId, null, result.count, page + 1);
+                } else {
+                    stuff.utils.sendConfirmation(stuff.message.channel, 'No user has joined this Meeting.', 'Members in Meeting #' + meetingId);
+                }
+            }).catch(e => {
+                stuff.utils.sendError(stuff.message.channel, 'An error has occured: ' + e);
+            });
+    }
+
     this.searchLocation = function(request, query) {
         const options = {
             url: 'https://nominatim.openstreetmap.org/search?q=' + encodeURI(query) + '&format=geocodejson&addressdetails=1',
@@ -359,7 +377,6 @@ module.exports = function() {
                     res.users.push(data.user_id);
                 }
 
-                console.log(res)
                 resolve(res);
             }).catch(e => {
                 reject(e);

@@ -186,6 +186,7 @@ client.on('message', message => {
             request: request,
             utils: Utils,
             discord: Discord,
+            client: client,
             choiceMan: choiceMan,
             meetingMan: meetingMan,
             choice: choice,
