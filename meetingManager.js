@@ -304,4 +304,16 @@ module.exports = function(dbObjects) {
             });
         });
     }
+
+    this.isMeetingOver = function(meetingId) {
+        return new Promise((resolve, reject) => {
+            this.getMeetingData(meetingId)
+                .then(result => {
+                    const data = result.dataValues;
+                    const actualTime = new Date().getTime() / 1000;
+
+                    resolve(data.start_time < actualTime);
+                });
+        });
+    }
 }
