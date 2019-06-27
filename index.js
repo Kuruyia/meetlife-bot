@@ -116,4 +116,18 @@ client.on('message', message => {
     }
 });
 
+client.on('guildMemberRemove', member => {
+    dbObjects.UpcomingMeetings.destroy({
+        where: {
+            owner_id: member.id
+        }
+    });
+
+    dbObjects.JoinedMeetings.destroy({
+        where: {
+            user_id: member.id
+        }
+    });
+});
+
 client.login(config.token);
