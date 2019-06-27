@@ -4,6 +4,8 @@ module.exports = {
     
 	execute(stuff) {
         var page = 0;
+        const actualTime = new Date().getTime() / 1000;
+        
         if (stuff.args.length >= 3) {
             const parsedPage = parseInt(stuff.args[2]);
 
@@ -23,6 +25,9 @@ module.exports = {
                     where: {
                         location_name: {
                             [stuff.dbObjects.seqOp.substring]: stuff.args[1]
+                        },
+                        start_time: {
+                            [stuff.dbObjects.seqOp.gt]: actualTime
                         }
                     }
                 }).then(searchResults => {
@@ -70,6 +75,9 @@ module.exports = {
                     where: {
                         owner_id: {
                             [stuff.dbObjects.seqOp.eq]: stuff.message.mentions.members.first().id
+                        },
+                        start_time: {
+                            [stuff.dbObjects.seqOp.gt]: actualTime
                         }
                     }
                 }).then(searchResults => {
@@ -86,6 +94,9 @@ module.exports = {
                     where: {
                         name: {
                             [stuff.dbObjects.seqOp.substring]: stuff.args[1]
+                        },
+                        start_time: {
+                            [stuff.dbObjects.seqOp.gt]: actualTime
                         }
                     }
                 }).then(searchResults => {

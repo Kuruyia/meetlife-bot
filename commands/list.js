@@ -5,6 +5,8 @@ module.exports = {
 	execute(stuff) {
         var isDesc = false;
         var page = 0;
+        const actualTime = new Date().getTime() / 1000;
+
         if (stuff.args.length >= 1) {
             const parsedPage = parseInt(stuff.args[0]);
 
@@ -26,6 +28,11 @@ module.exports = {
         }
 
         stuff.dbObjects.UpcomingMeetings.findAndCountAll({
+            where: {
+                start_time: {
+                    [stuff.dbObjects.seqOp.gt]: actualTime
+                }
+            },
             offset: page * stuff.config.search_limit,
             limit: stuff.config.search_limit,
             order: [[stuff.dbObjects.sequelize.col('start_time'), isDesc ? 'DESC' : 'ASC']]

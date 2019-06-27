@@ -4,6 +4,8 @@ module.exports = {
     
 	execute(stuff) {
         var page = 0;
+        const actualTime = new Date().getTime() / 1000;
+
         if (stuff.args.length >= 1) {
             const parsedPage = parseInt(stuff.args[0]);
 
@@ -17,10 +19,18 @@ module.exports = {
 
         stuff.dbObjects.JoinedMeetings.findAndCountAll({
             where: {
-                user_id: stuff.message.author.id
+                user_id: stuff.message.author.id,
             },
             offset: page * stuff.config.search_limit,
-            limit: stuff.config.search_limit
+            limit: stuff.config.search_limit,
+            include: [{
+                model: stuff.dbObjects.UpcomingMeetings,
+                where: {
+                    start_time: {
+                        [stuff.dbObjects.seqOp.gt]: actualTime
+                    }
+                }
+            }]
         }).then(result => {
             var promiseList = [result.count];
             for (i = 0; i < result.rows.length; i++) {
