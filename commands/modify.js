@@ -34,6 +34,11 @@ module.exports = {
     
     modifyMeeting(stuff, id, ownerOverriden) {
         if (stuff.args[1] == 'name') {
+            if (stuff.args[2].length > 64) {
+                stuff.utils.sendError(stuff.message.channel, 'Meeting name might not exceed 64 characters.');
+                return;
+            }
+
             module.exports.modifyName(stuff, id, stuff.args[2], ownerOverriden);
         } else if (stuff.args[1] == 'date') {
             const chronoRes = stuff.chronode.parse(stuff.args[2]);
@@ -71,14 +76,14 @@ module.exports = {
                                 }
                             }
                             
-                            stuff.choiceMan.addChoice(stuff.message.author.id, new stuff.choice(json.features.length.toString() + ' matches for query "' + stuff.args[1] + '"', choiceTexts, json.features, function(option, data) {
+                            stuff.choiceMan.addChoice(stuff.message.author.id, new stuff.choice('Location result for Meeting #' + id, choiceTexts, json.features, function(option, data) {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {  
                                     module.exports.modifyLocation(stuff, id, data[option], ownerOverriden);
                                 } else {
                                     stuff.utils.sendError(stuff.message.channel, 'Unable to get GPS data from this place.')
                                 }
                             }));
-                            stuff.choiceMan.sendChoicesToChannel(stuff.discord, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
+                            stuff.choiceMan.sendChoicesToChannel(stuff, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
                         }
                     } else {
                         stuff.utils.sendError(stuff.message.channel, 'No place found for query "' + stuff.args[1] + '"');

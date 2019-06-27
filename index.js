@@ -59,9 +59,24 @@ var Utils = {
         if (textList.length > 0) {
             constructedEmbed.setColor('BLUE');
 
+            var textLength = 0;
             var message = '';
+            var isFirstField = true;
             for (i = 0; i < textList.length; i++) {
-                message = message.concat(textList[i] + '\n');
+                const actualText = textList[i] + '\n';
+                message = message.concat(actualText);
+                textLength += actualText.length;
+
+                if (i < textList.length - 1 && textLength + (textList[i + 1] + '\n').length > 1024) {
+                    constructedEmbed.addField(isFirstField ? title : '\u200B', message);
+
+                    textLength = 0;
+                    message = '';
+                    isFirstField = false;
+                }
+            }
+            if (message.length > 0) {
+                constructedEmbed.addField(isFirstField ? title : '\u200B', message);
             }
 
             var footerText = '';
@@ -75,7 +90,6 @@ var Utils = {
                 title = title.concat(' [' + page + '/' + maxPage + ']');
             }
 
-            constructedEmbed.addField(title, message);
             constructedEmbed.setFooter(footerText);
         } else {
             constructedEmbed.setColor('RED');

@@ -4,6 +4,11 @@ module.exports = {
     
 	execute(stuff) {
         if (stuff.args.length >= 3) {
+            if (stuff.args[0].length > 64) {
+                stuff.utils.sendError(stuff.message.channel, 'Meeting name might not exceed 64 characters.');
+                return;
+            }
+
             const chronoRes = stuff.chronode.parse(stuff.args[2]);
         
             if (chronoRes.length == 0) {
@@ -20,7 +25,7 @@ module.exports = {
             var joinLimit = 0;
             if (stuff.args.length >= 4) {
                 const parsedLimit = parseInt(stuff.args[3]);
-                if (!isNaN(parsedLimit) && parsedLimit > 0) {
+                if (!isNaN(parsedLimit) && parsedLimit >= 0) {
                     joinLimit = parsedLimit;
                 } else {
                     stuff.utils.sendError(stuff.message.channel, 'Invalid join limit: **' + stuff.args[3] + '**');
@@ -48,14 +53,14 @@ module.exports = {
                                 }
                             }
                             
-                            stuff.choiceMan.addChoice(stuff.message.author.id, new stuff.choice(json.features.length.toString() + ' matches for query "' + stuff.args[1] + '"', choiceTexts, json.features, function(option, data) {
+                            stuff.choiceMan.addChoice(stuff.message.author.id, new stuff.choice('Location results for new Meeting', choiceTexts, json.features, function(option, data) {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {  
                                     stuff.meetingMan.addMeeting(stuff, stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, joinLimit);
                                 } else {
                                     stuff.utils.sendError(stuff.message.channel, 'Unable to get GPS data from this place.')
                                 }
                             }));
-                            stuff.choiceMan.sendChoicesToChannel(stuff.discord, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
+                            stuff.choiceMan.sendChoicesToChannel(stuff, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
                         }
                     } else {
                         stuff.utils.sendError(stuff.message.channel, 'No place found for query "' + stuff.args[1] + '"');

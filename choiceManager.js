@@ -15,30 +15,15 @@ module.exports = function() {
         return this.choices.hasOwnProperty(user);
     }
 
-    this.sendChoicesToChannel = function(discord, channel, prefix, user) {
+    this.sendChoicesToChannel = function(stuff, channel, prefix, user) {
         if (this.hasUserActiveChoice(user)) {
             const selectedUser = this.choices[user];
-            const constructedEmbed = new discord.RichEmbed();
-            constructedEmbed.setColor('BLUE');
-            constructedEmbed.setTitle(selectedUser.choiceTitle);
-
-            const entryPerField = 5;
-            const fieldCount = Math.ceil(selectedUser.choiceTexts.length / entryPerField);
-            for (i = 0; i < fieldCount; i++) {
-                var message = '';
-
-                for (j = i * entryPerField; j < Math.min(selectedUser.choiceTexts.length, (i + 1) * entryPerField); j++) {
-                    const actualText = selectedUser.choiceTexts[j];
-
-                    message = message.concat('**#' + (j + 1) + '** - ' + actualText + '\n');
-                }
-
-                constructedEmbed.addField('Entries ' + (i * entryPerField + 1) + '..' + Math.min(selectedUser.choiceTexts.length, (i + 1) * entryPerField), message);
+            var texts = [];
+            for (i = 0; i < selectedUser.choiceTexts.length; i++) {
+                texts.push('**#' + (i + 1) + '** - ' + selectedUser.choiceTexts[i]);
             }
 
-            constructedEmbed.setFooter('You can choose with "' + prefix + 'choice choose [1-' + selectedUser.data.length + ']" or cancel with "' + prefix + 'choice cancel"');
-
-            channel.send(constructedEmbed);
+            stuff.utils.sendPagedList(channel, texts, selectedUser.choiceTitle, 'You can choose with "' + prefix + 'choice choose [1-' + selectedUser.data.length + ']" or cancel with "' + prefix + 'choice cancel"');
 
             return true;
         } else {
