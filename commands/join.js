@@ -7,22 +7,23 @@ module.exports = {
             const meetingId = parseInt(stuff.args[0]);
             if (!isNaN(meetingId)) {
                 var notifDelay = 1;
+                var minuteMode = false;
                 if (stuff.args.length >= 2) {
-                    const parsedSecondArg = parseFloat(stuff.args[1])
-                    if (!isNaN(parsedSecondArg) && parsedSecondArg >= 0 && parsedSecondArg <= 24 * 7) {
-                        notifDelay = parsedSecondArg;
-                    } else {
-                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid input: The second argument must be an hour between **0** and **168**.');
+                    if (stuff.args[1].endsWith('m') || stuff.args[1].endsWith('h')) {
+                        minuteMode = stuff.args[1].endsWith('m');
+                        stuff.args[1] = stuff.args[1].substr(0, stuff.args[1].length - 1);
+                    }
+        
+                    var parsedTime = parseFloat(stuff.args[1]);
+                    if (isNaN(parsedTime) || (notifDelay = minuteMode ? parsedTime / 60 : parsedTime) < 0 || notifDelay > 168) {
+                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'The second argument must be an hour between **0** and **168**,\nor a minute between **0** and **10 080** suffixed with the letter "m".');
                         return;
                     }
                 }
 
-                stuff.meetingMan.getMeetingData(meetingId)
-                    .then(result => {
-                        const data = result.dataValues;
-                        const actualTime = new Date().getTime() / 1000;
-
-                        if (data.start_time >= actualTime) {
+                stuff.meetingMan.isMeetingOver(meetingId)
+                    .then(over => {
+                        if (!over) {
                             return stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId, notifDelay);
                         } else {
                             throw "You can't join a finished Meeting.";
