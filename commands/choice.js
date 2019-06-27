@@ -27,7 +27,7 @@ module.exports = {
             if (rep != true) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, rep);
             } else {
-                stuff.sendUtils.sendConfirmation(stuff.message.channel, 'Your active choice has been canceled.');
+                stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, 'Your active choice has been canceled.');
             }
         } else if (stuff.args[0] == 'choose') {
             const rep = stuff.choiceMan.choose(stuff.message.author.id, stuff.args[1]);

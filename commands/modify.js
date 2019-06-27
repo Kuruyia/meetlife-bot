@@ -107,7 +107,7 @@ module.exports = {
     modifyName(stuff, id, name, ownerOverriden) {
         stuff.meetingMan.modifyMeetingName(id, name)
             .then(function(response) {
-                stuff.sendUtils.sendConfirmation(stuff.message.channel, "New name: **" + response + '**', 'Name modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
+                stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, "New name: **" + response + '**', 'Name modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
                 stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The name of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
@@ -125,7 +125,7 @@ module.exports = {
                     endDate = new Date(response.endDate * 1000);
                 }
 
-                stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.sendUtils.formatDate(startDate, endDate), 'Date modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
+                stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, stuff.sendUtils.formatDate(startDate, endDate), 'Date modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
                 stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The date of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
@@ -137,7 +137,7 @@ module.exports = {
     modifyLocation(stuff, id, actualFeature, ownerOverriden) {
         stuff.meetingMan.modifyMeetingLocation(id, actualFeature)
             .then(function(response) {
-                stuff.sendUtils.sendConfirmation(stuff.message.channel, response.name + '\n' + response.latitude + ', ' + response.longitude, 'Location modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
+                stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, response.name + '\n' + response.latitude + ', ' + response.longitude, 'Location modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
                 stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The location of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
@@ -150,7 +150,7 @@ module.exports = {
         stuff.meetingMan.modifyMeetingLimit(id, limit)
             .then(function(response) {
                 var message = response == 0 ? 'Join limit removed' : 'New join limit: **' + response + '**';
-                stuff.sendUtils.sendConfirmation(stuff.message.channel, message, 'Join limit modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
+                stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, message, 'Join limit modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
             })
             .catch(function(e) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to modify the join limit of Meeting #' + id + '.');

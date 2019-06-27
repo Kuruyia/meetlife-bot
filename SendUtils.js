@@ -13,7 +13,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         channel.send('<@' + authorId + '>', {embed: constructedEmbed});
     },
     
-    this.sendConfirmation = function(channel, message, title = 'Confirmation', footer = null) {
+    this.sendConfirmation = function(channel, authorId, message, title = 'Confirmation', footer = null) {
         const constructedEmbed = new this.discord.RichEmbed();
         constructedEmbed.setColor('BLUE');
         constructedEmbed.addField(title, message);
@@ -22,7 +22,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             constructedEmbed.setFooter(footer);
         }
     
-        channel.send(constructedEmbed);
+        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
     },
     
     this.sendUsage = function(channel, command, message) {
@@ -205,7 +205,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
 
                     this.sendPagedList(channel, textList, 'Members in Meeting #' + meetingId, null, result.count, page + 1);
                 } else {
-                    this.sendConfirmation(channel, 'No user has joined this Meeting.', 'Members in Meeting #' + meetingId);
+                    this.sendConfirmation(channel, authorId, 'No user has joined this Meeting.', 'Members in Meeting #' + meetingId);
                 }
             }).catch(e => {
                 this.sendError(channel, authorId, 'An error has occured: ' + e);
@@ -224,7 +224,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         Promise.all(usersLookup)
             .then(result => {
                 for (i = 0; i < result.length; i++) {
-                    this.sendConfirmation(result[i], message, 'Notification');
+                    this.sendConfirmation(result[i], authorId, message, 'Notification');
                     if (data) {
                         this.sendInfoPanelFromData(authorId, result[i], data);
                     } else {

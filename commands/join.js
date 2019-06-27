@@ -8,7 +8,7 @@ module.exports = {
             if (!isNaN(meetingId)) {
                 stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId)
                     .then(function() {
-                        stuff.sendUtils.sendConfirmation(stuff.message.channel, 'You have joined Meeting #' + meetingId);
+                        stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, 'You have joined Meeting #' + meetingId);
                     })
                     .catch(function(error) {
                         stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, error);
