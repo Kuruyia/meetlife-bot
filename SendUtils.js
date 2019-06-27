@@ -212,7 +212,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             });
     }
 
-    this.notifyUsers = function(authorId, client, meetingId, userIdList, message, data = null) {
+    this.notifyUsers = function(authorId, client, userIdList, message, meetingId = null, data = null) {
         var usersLookup = [];
         for (i = 0; i < userIdList.length; i++) {
             const actualPromise = client.fetchUser(userIdList[i]);
@@ -225,19 +225,22 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             .then(result => {
                 for (i = 0; i < result.length; i++) {
                     this.sendConfirmation(result[i], authorId, message, 'Notification');
-                    if (data) {
-                        this.sendInfoPanelFromData(authorId, result[i], data);
-                    } else {
-                        this.sendInfoPanel(authorId, result[i], meetingId);
+                    
+                    if (meetingId) {
+                        if (data) {
+                            this.sendInfoPanelFromData(authorId, result[i], data);
+                        } else {
+                            this.sendInfoPanel(authorId, result[i], meetingId);
+                        }
                     }
                 }
             });
     }
 
-    this.notifyUsersInMeeting = function(authorId, client, meetingId, message, data = null) {
+    this.notifyUsersInMeeting = function(authorId, client, message, meetingId = null, data = null) {
         this.meetingManager.getUsersInMeeting(meetingId)
             .then(result => {
-                this.notifyUsers(authorId, client, meetingId, result.users, message, data)
+                this.notifyUsers(authorId, client, result.users, message, meetingId, data)
             }).catch(e => {
                 console.log('Error while notifying users: ' + e);
             });
