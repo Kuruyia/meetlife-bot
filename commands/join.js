@@ -19,7 +19,16 @@ module.exports = {
 
                 stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId, notifDelay)
                     .then(function() {
-                        stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, 'You have joined Meeting #' + meetingId);
+                        var confirmMessage = 'You have joined Meeting **#' + meetingId + '**\n';
+                        if (notifDelay < 1) {
+                            const minutes = parseInt(notifDelay * 60);
+                            confirmMessage = confirmMessage.concat('You will be reminded ' + minutes + (minutes > 1 ? ' minutes ' : ' minute ') + 'before the Meeting begins.');
+                        } else {
+                            const hour = parseInt(notifDelay);
+                            confirmMessage = confirmMessage.concat('You will be reminded ' + hour + 'h' + parseInt(notifDelay * 60 - (hour * 60)).toString().padStart(2, '0') + ' before the Meeting begins.');
+                        }
+
+                        stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, confirmMessage);
                     })
                     .catch(function(error) {
                         stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, error);

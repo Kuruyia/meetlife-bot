@@ -25,6 +25,32 @@ for (const file of commandFiles) {
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
   delete config.token;
+
+  setInterval(() => {
+    const sequelize = dbObjects.sequelize;
+    const actualTime = new Date().getTime() / 1000;
+
+    sequelize.query('SELECT * FROM `joined_meetings` LEFT JOIN upcoming_meetings ON joined_meetings.upcoming_meeting_id = upcoming_meetings.id WHERE upcoming_meetings.start_time < ' + actualTime + ' + (joined_meetings.notify_delay * 3600) AND NOT joined_meetings.notified')
+        .then(result => {
+            const queryRes = result[0];
+
+            for (i = 0; i < queryRes.length; i++) {
+                const currentRow = queryRes[i];
+                const userId = currentRow.user_id;
+                const meetingId = currentRow.upcoming_meeting_id;
+
+                dbObjects.JoinedMeetings.update(
+                    {notified: true},
+                    {where: {
+                        user_id: userId,
+                        upcoming_meeting_id: meetingId
+                    }}
+                );
+
+                sendUtils.notifyUser(client, userId, 'A Meeting you have joined will start soon.', meetingId);
+            }
+        });
+}, 60 * 1000);
 });
 
 client.on('message', message => {
@@ -34,7 +60,7 @@ client.on('message', message => {
     const command = args.shift().toLowerCase();
 
     if (command != 'choice' && choiceMan.hasUserActiveChoice(message.author.id)) {
-        sendUtils.sendError(message.channel, stuff.message.author.id, 'You must select an option of your active choice before using the bot.');
+        sendUtils.sendError(message.channel, message.author.id, 'You must select an option of your active choice before using the bot.');
         return;
     }
     
@@ -84,7 +110,7 @@ client.on('message', message => {
             config: config});
     } catch (error) {
         console.error(error);
-        sendUtils.sendError(message.channel, stuff.message.author.id, "An error occured while executing this command.")
+        sendUtils.sendError(message.channel, message.author.id, "An error occured while executing this command.")
     }
 });
 
