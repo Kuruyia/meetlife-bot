@@ -25,7 +25,7 @@ module.exports = {
             var promiseList = [result.count];
             for (i = 0; i < result.rows.length; i++) {
                 const data = result.rows[i].dataValues;
-                promiseList.push(stuff.meetingMan.getMeetingData(stuff, data.upcoming_meeting_id));
+                promiseList.push(stuff.meetingMan.getMeetingData(data.upcoming_meeting_id));
             }
             
             return Promise.all(promiseList);

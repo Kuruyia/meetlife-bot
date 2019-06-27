@@ -9,7 +9,7 @@ const choice = require('./choice')
 const config = require('./config.json');
 
 const choiceMan = new ChoiceManager();
-const meetingMan = new MeetingManager();
+const meetingMan = new MeetingManager(dbObjects);
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 

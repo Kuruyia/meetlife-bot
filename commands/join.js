@@ -6,7 +6,7 @@ module.exports = {
         if (stuff.args.length >= 1) {
             const meetingId = parseInt(stuff.args[0]);
             if (!isNaN(meetingId)) {
-                stuff.meetingMan.joinUserToMeeting(stuff, stuff.message.author.id, meetingId)
+                stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId)
                     .then(function() {
                         stuff.utils.sendConfirmation(stuff.message.channel, 'You have joined Meeting #' + meetingId);
                     })

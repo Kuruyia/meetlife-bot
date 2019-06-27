@@ -21,7 +21,7 @@ module.exports = {
 
                     stuff.meetingMan.sendMeetingMembersPanel(stuff, stuff.client, meetingId, page);
                 } else if (stuff.args.length < 2 || stuff.args[1] == 'info') {
-                    stuff.meetingMan.sendInfoPanel(stuff, meetingId);
+                    stuff.meetingMan.sendInfoPanel(stuff, stuff.message.channel, meetingId);
                 } else {
                     stuff.utils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
                 }
