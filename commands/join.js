@@ -17,8 +17,17 @@ module.exports = {
                     }
                 }
 
-                stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId, notifDelay)
-                    .then(function() {
+                stuff.meetingMan.getMeetingData(meetingId)
+                    .then(result => {
+                        const data = result.dataValues;
+                        const actualTime = new Date().getTime() / 1000;
+
+                        if (data.start_time >= actualTime) {
+                            return stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId, notifDelay);
+                        } else {
+                            throw "You can't join a finished Meeting.";
+                        }
+                    }).then(function() {
                         var confirmMessage = 'You have joined Meeting **#' + meetingId + '**\n';
                         if (notifDelay < 1) {
                             const minutes = parseInt(notifDelay * 60);
