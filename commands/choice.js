@@ -27,11 +27,7 @@ module.exports = {
             if (rep != true) {
                 stuff.sendUtils.sendError(stuff.message.channel, rep);
             } else {
-                const constructedEmbed = new stuff.discord.RichEmbed();
-                constructedEmbed.setColor('BLUE');
-                constructedEmbed.addField('Active choice', 'Your active choice has been canceled.');
-
-                stuff.message.channel.send(constructedEmbed);
+                stuff.sendUtils.sendConfirmation(stuff.message.channel, 'Your active choice has been canceled.');
             }
         } else if (stuff.args[0] == 'choose') {
             const rep = stuff.choiceMan.choose(stuff.message.author.id, stuff.args[1]);
