@@ -21,5 +21,23 @@ module.exports = {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, rep);
             }
         }
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'list/cancel/choose', description: 'Subcommands for this command'}
+            ];
+
+            return {command: this.name, args: argsList};
+        } else {
+            if (args[0] == 'choose') {
+                const argsList = [
+                    {name: '1..x', description: 'Index of the chosen selection, where x is the max index'}
+                ];
+    
+                return {command: this.name, args: argsList};
+            }
+        }
+    },
 };

@@ -55,5 +55,15 @@ module.exports = {
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id]');
         }
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'id', description: 'ID of a Meeting you own, to be deleted'}
+            ];
+
+            return {command: this.name, args: argsList};
+        }
+    },
 };

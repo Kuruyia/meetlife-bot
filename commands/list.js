@@ -39,5 +39,16 @@ module.exports = {
         }).then(result => {
             stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, result.rows, 'Upcoming meeting list', isDesc ? 'Sorted from descending order' : 'Sorted from ascending order', result.count, page + 1);
         });
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'page', description: 'Number of the page to show', optional: true},
+                {name: 'a/d', description: 'Set the list in an ascending (a) or descending (d) order, based on starting date', optional: true}
+            ];
+
+            return {command: this.name, args: argsList};
+        }
+    },
 };

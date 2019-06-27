@@ -44,5 +44,5 @@ module.exports = {
 
             stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, result, 'Joined meetings', null, count, page + 1);
         });
-	},
+    },
 };

@@ -236,6 +236,44 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             });
     }
 
+    this.sendHelpPanel = function(channel, authorId, command, args, url = null) {
+        const constructedEmbed = new this.discord.RichEmbed();
+        constructedEmbed.setColor('PURPLE');
+
+        var fullCommand = this.prefix + command;
+        for (i = 0; i < args.length; i++) {
+            const currentArg = args[i];
+            if (!currentArg.optional) {
+                fullCommand = fullCommand.concat(' <' + currentArg.name + '>');
+            } else {
+                fullCommand = fullCommand.concat(' [' + currentArg.name + ']');
+            }
+        }
+        constructedEmbed.addField('Help - ' + command, '**' + fullCommand + '**');
+
+        for (i = 0; i < args.length; i++) {
+            const currentArg = args[i];
+            if (currentArg.optional) {
+                constructedEmbed.addField('[' + currentArg.name + ']', '_(Optional)_ ' + currentArg.description, true);
+            } else if (currentArg.static) {
+                constructedEmbed.addField(currentArg.name, currentArg.description, true);
+            } else {
+                constructedEmbed.addField('<' + currentArg.name + '>', currentArg.description, true);
+            }
+        }
+
+        if (url) {
+            constructedEmbed.setURL(url);
+            constructedEmbed.setFooter('Click this embed title to open the Wiki page.');
+        }
+
+        if (authorId) {
+            channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        } else {
+            channel.send(constructedEmbed);
+        }
+    }
+
     this.notifyUser = function(client, userId, message, meetingId = null, data = null) {
         return new Promise((resolve, reject) => {
             client.fetchUser(userId)

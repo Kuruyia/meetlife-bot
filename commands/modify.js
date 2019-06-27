@@ -168,4 +168,50 @@ module.exports = {
                 console.log(e);
             });
     },
+
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'id', description: 'ID of a Meeting you own, to be modified'},
+                {name: 'name/date/location/limit', description: 'Value to be modified'},
+                {name: 'query', description: 'Argument to modify the value\nAdd one of the values in the help command for more details'}
+            ];
+
+            return {command: this.name, args: argsList};
+        } else {
+            if (args[0] == 'name') {
+                const argsList = [
+                    {name: 'id', description: 'ID of a Meeting you own, to be modified'},
+                    {name: 'name', description: 'Name will be modified', static: true},
+                    {name: 'new_name', description: 'New name of the Meeting'}
+                ];
+    
+                return {command: this.name, args: argsList};
+            } else if (args[0] == 'date') {
+                const argsList = [
+                    {name: 'id', description: 'ID of a Meeting you own, to be modified'},
+                    {name: 'date', description: 'Date will be modified', static: true},
+                    {name: 'new_date', description: 'New date of the Meeting\nIt can be naturally written, and this will reset the notifications of members'}
+                ];
+    
+                return {command: this.name, args: argsList};
+            } else if (args[0] == 'location') {
+                const argsList = [
+                    {name: 'id', description: 'ID of a Meeting you own, to be modified'},
+                    {name: 'location', description: 'Location will be modified', static: true},
+                    {name: 'new_location', description: 'New location of the Meeting\nThis will initiate a new search request'}
+                ];
+    
+                return {command: this.name, args: argsList};
+            } else if (args[0] == 'limit') {
+                const argsList = [
+                    {name: 'id', description: 'ID of a Meeting you own, to be modified'},
+                    {name: 'limit', description: 'Limit will be modified', static: true},
+                    {name: 'new_limit', description: 'New limit of the Meeting\nMembers will not get kicked if the limit is lower than the member count'}
+                ];
+    
+                return {command: this.name, args: argsList};
+            }
+        }
+    },
 };

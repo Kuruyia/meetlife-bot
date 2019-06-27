@@ -95,5 +95,18 @@ module.exports = {
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[name] [location] [start _(and end)_ date] _(join limit)_');
         }
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'name', description: 'Name of your new Meeting'},
+                {name: 'location', description: 'Search request for the location of your Meeting'},
+                {name: 'date', description: 'Start (and end) date of your Meeting'},
+                {name: 'limit', description: 'Limit of users that can join this Meeting', optional: true}
+            ];
+
+            return {command: this.name, args: argsList};
+        }
+    },
 };

@@ -31,5 +31,16 @@ module.exports = {
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id] _(info/members)_');
         }
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'id', description: 'ID of the Meeting to get info from'},
+                {name: 'info/members', description: "Select between showing Meeting's information or members\nDefault: info", optional: true}
+            ];
+
+            return {command: this.name, args: argsList};
+        }
+    },
 };

@@ -47,7 +47,18 @@ module.exports = {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
             }
         } else {
-            stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id]');
+            stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id] _(reminder hour)_');
         }
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'id', description: 'ID of the Meeting to join'},
+                {name: 'remind', description: "Delay you'll be reminded before the Meeting begins\nDefault unit: hour, change to minute by following the number by a \"m\""}
+            ];
+
+            return {command: this.name, args: argsList};
+        }
+    },
 };

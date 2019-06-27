@@ -44,5 +44,16 @@ module.exports = {
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id] [member mention]');
         }
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'id', description: 'ID of a Meeting you own, to kick a member from'},
+                {name: 'member: mention', description: 'Mention of the member that will be kicked'}
+            ];
+
+            return {command: this.name, args: argsList};
+        }
+    },
 };

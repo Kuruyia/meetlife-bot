@@ -38,5 +38,16 @@ module.exports = {
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id] [member mention]');
         }
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'id', description: 'ID of a Meeting, to put a member in'},
+                {name: 'member: mention', description: 'Mention of the member that will force-join'}
+            ];
+
+            return {command: this.name, args: argsList};
+        }
+    },
 };

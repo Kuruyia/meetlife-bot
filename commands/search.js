@@ -108,5 +108,51 @@ module.exports = {
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[location/day/owner/name] [query] _(page)_');
         }
-	},
+    },
+    
+    getHelp(args) {
+        if (args.length == 0) {
+            const argsList = [
+                {name: 'location/day/owner/name', description: 'Type of search'},
+                {name: 'query', description: 'Argument to modify the value\nAdd one of the values in the help command for more details'},
+                {name: 'page', description: 'Number of the page to show', optional: true},
+            ];
+
+            return {command: this.name, args: argsList};
+        } else {
+            if (args[0] == 'location') {
+                const argsList = [
+                    {name: 'location', description: 'Type of search set to location'},
+                    {name: 'query', description: 'Text that will be searched in every Meeting location\nThis searches for the long location, meaning that you can input a city name for instance'},
+                    {name: 'page', description: 'Number of the page to show', optional: true},
+                ];
+    
+                return {command: this.name, args: argsList};
+            } else if (args[0] == 'day') {
+                const argsList = [
+                    {name: 'day', description: 'Type of search set to day'},
+                    {name: 'query', description: 'Day that will be used to search for matching Meetings\nThis is compatible with natural date typing'},
+                    {name: 'page', description: 'Number of the page to show', optional: true},
+                ];
+    
+                return {command: this.name, args: argsList};
+            } else if (args[0] == 'owner') {
+                const argsList = [
+                    {name: 'owner', description: 'Type of search set to owner'},
+                    {name: 'query: mention', description: 'Mention that will be used to search for every Meeting owned by this user'},
+                    {name: 'page', description: 'Number of the page to show', optional: true},
+                ];
+    
+                return {command: this.name, args: argsList};
+            } else if (args[0] == 'name') {
+                const argsList = [
+                    {name: 'name', description: 'Type of search set to name'},
+                    {name: 'query', description: 'Text that will be searched in every Meeting name'},
+                    {name: 'page', description: 'Number of the page to show', optional: true},
+                ];
+    
+                return {command: this.name, args: argsList};
+            }
+        }
+    },
 };
