@@ -343,4 +343,27 @@ module.exports = function() {
                 });
         });
     }
+
+    this.getUsersInMeeting = function(stuff, meetingId, limit = null, offset = null) {
+        return new Promise((resolve, reject) => {
+            stuff.dbObjects.JoinedMeetings.findAndCountAll({
+                limit: limit,
+                offset: offset,
+                where: {
+                    upcoming_meeting_id: meetingId
+                }
+            }).then(result => {
+                var res = {count: result.count, users: []};
+                for (i = 0; i < result.rows.length; i++) {
+                    const data = result.rows[i].dataValues;
+                    res.users.push(data.user_id);
+                }
+
+                console.log(res)
+                resolve(res);
+            }).catch(e => {
+                reject(e);
+            });
+        })
+    }
 }
