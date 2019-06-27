@@ -101,7 +101,7 @@ module.exports = function(dbObjects) {
     }
 
     this.modifyMeetingDate = function(id, startDate, endDate) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             this.dbObjects.UpcomingMeetings.update({
                 start_time: startDate,
                 end_time: endDate
@@ -117,6 +117,15 @@ module.exports = function(dbObjects) {
                 } else {
                     reject();
                 }
+
+                return this.dbObjects.JoinedMeetings.update({
+                    notified: false
+                },
+                {
+                    where: {
+                        upcoming_meeting_id: id
+                    }
+                })
             });
         });
     }
