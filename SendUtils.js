@@ -232,29 +232,27 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             });
     }
 
-    this.notifyUsers = function(authorId, client, userIdList, message, meetingId = null, data = null) {
-        var usersLookup = [];
-        for (i = 0; i < userIdList.length; i++) {
-            const actualPromise = client.fetchUser(userIdList[i]);
-            actualPromise.catch(() => undefined);
-
-            usersLookup.push(actualPromise);
-        }
-
-        Promise.all(usersLookup)
-            .then(result => {
-                for (i = 0; i < result.length; i++) {
-                    this.sendConfirmation(result[i], authorId, message, 'Notification');
+    this.notifyUser = function(authorId, client, userId, message, meetingId = null, data = null) {
+        return new Promise((resolve, reject) => {
+            client.fetchUser(userId)
+                .then(result => {
+                    this.sendConfirmation(result, authorId, message, 'Notification');
                     
                     if (meetingId) {
                         if (data) {
-                            this.sendInfoPanelFromData(authorId, result[i], data);
+                            this.sendInfoPanelFromData(authorId, result, data);
                         } else {
-                            this.sendInfoPanel(authorId, result[i], meetingId);
+                            this.sendInfoPanel(authorId, result, meetingId);
                         }
                     }
-                }
-            });
+                }).catch(() => undefined);
+        });
+    }
+
+    this.notifyUsers = function(authorId, client, userIdList, message, meetingId = null, data = null) {
+        for (i = 0; i < userIdList.length; i++) {
+            this.notifyUser(authorId, client, userIdList[i], message, meetingId, data);
+        }
     }
 
     this.notifyUsersInMeeting = function(authorId, client, message, meetingId = null, data = null) {
