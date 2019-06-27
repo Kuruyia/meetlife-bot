@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'remind',
-    description: 'Meeting reminder',
+    description: 'Change the remind time of a joined Meeting',
     
 	execute(stuff) {
         if (stuff.args.length >= 2) {

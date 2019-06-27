@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'leave',
-    description: 'Meeting le(a)ver',
+    description: 'Leave a Meeting',
     
 	execute(stuff) {
         if (stuff.args.length >= 1) {

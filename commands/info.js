@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'info',
-    description: 'Meeting info',
+    description: 'Get information about a Meeting',
     
 	execute(stuff) {
         if (stuff.args.length >= 1) {

@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'choice',
-    description: 'Choice manager',
+    description: 'Choice management',
     
 	execute(stuff) {
         if (stuff.args[0] == 'list') {

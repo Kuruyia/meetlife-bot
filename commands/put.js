@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'put',
-    description: 'Meeting putter',
+    description: 'Put a user in a Meeting (Moderator only)',
     
 	execute(stuff) {
         if (!stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES)) {

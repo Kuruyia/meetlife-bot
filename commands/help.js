@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'help',
-    description: 'Helping a lot',
+    description: 'Provides help about this bot',
     
 	execute(stuff) {
         if (stuff.args.length >= 1 && (stuff.args.length > 1 || isNaN(parseInt(stuff.args[0])))) {

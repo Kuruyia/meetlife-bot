@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'remove',
-    description: 'Meeting remove',
+    description: 'Delete one of your Meeting',
     
 	execute(stuff) {
         if (stuff.args.length >= 1) {

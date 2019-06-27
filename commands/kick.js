@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'kick',
-    description: 'Meeting kicker',
+    description: 'Kick a member of your Meeting',
     
 	execute(stuff) {
         if (stuff.args.length >= 2) {

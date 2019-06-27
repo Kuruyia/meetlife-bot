@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'list',
-    description: 'Meeting list',
+    description: 'Get a list of upcoming Meetings',
     
 	execute(stuff) {
         var isDesc = false;

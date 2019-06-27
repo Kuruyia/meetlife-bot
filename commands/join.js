@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'join',
-    description: 'Meeting joiner',
+    description: 'Join a Meeting',
     
 	execute(stuff) {
         if (stuff.args.length >= 1) {

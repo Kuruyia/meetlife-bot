@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'search',
-    description: 'Meeting search',
+    description: 'Search for Meetings based on a criteria',
     
 	execute(stuff) {
         var page = 0;

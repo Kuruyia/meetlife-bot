@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'add',
-    description: 'Meeting add',
+    description: 'Create a new Meeting',
     
 	execute(stuff) {
         if (stuff.args.length >= 3) {

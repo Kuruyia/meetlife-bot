@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'joinlist',
-    description: 'Joined meetings list',
+    description: 'Get a list of Meetings you joined',
     
 	execute(stuff) {
         var page = 0;
