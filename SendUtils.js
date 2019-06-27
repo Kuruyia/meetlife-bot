@@ -5,15 +5,15 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
     this.locale = locale;
     this.listLimit = listLimit;
 
-    this.sendError = function(channel, message, title = 'Error') {
+    this.sendError = function(channel, authorId, message, title = 'Error') {
         const constructedEmbed = new this.discord.RichEmbed();
         constructedEmbed.setColor('RED');
         constructedEmbed.addField(title, message);
     
-        channel.send(constructedEmbed);
+        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
     },
     
-    this.sendConfirmation = function(channel, message, title = 'Confirmation', footer) {
+    this.sendConfirmation = function(channel, message, title = 'Confirmation', footer = null) {
         const constructedEmbed = new this.discord.RichEmbed();
         constructedEmbed.setColor('BLUE');
         constructedEmbed.addField(title, message);
@@ -187,14 +187,14 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                 if (result) {
                     this.sendInfoPanelFromData(authorId, channel, result.dataValues, message);
                 } else {
-                    this.sendError(channel, 'Invalid meeting id.');
+                    this.sendError(channel, authorId, 'Invalid meeting id.');
                 }
             }).catch(e => {
-                this.sendError(channel, 'An error has occured: ' + e);
+                this.sendError(channel, authorId, 'An error has occured: ' + e);
             });
     }
 
-    this.sendMeetingMembersPanel = function(channel, meetingId, page = 0) {
+    this.sendMeetingMembersPanel = function(channel, authorId, meetingId, page = 0) {
         this.meetingManager.getUsersInMeeting(meetingId, this.listLimit, this.listLimit * page)
             .then(result => {
                 if (result.count > 0) {
@@ -208,7 +208,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                     this.sendConfirmation(channel, 'No user has joined this Meeting.', 'Members in Meeting #' + meetingId);
                 }
             }).catch(e => {
-                this.sendError(channel, 'An error has occured: ' + e);
+                this.sendError(channel, authorId, 'An error has occured: ' + e);
             });
     }
 

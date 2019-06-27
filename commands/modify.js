@@ -18,14 +18,14 @@ module.exports = {
                         if (ownerId == stuff.message.author.id || stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES)) {
                             module.exports.modifyMeeting(stuff, meetingId, ownerId != stuff.message.author.id && stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES));
                         } else {
-                            stuff.sendUtils.sendError(stuff.message.channel, 'You can\'t modify this meeting because you don\'t own it.');
+                            stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'You can\'t modify this meeting because you don\'t own it.');
                         }
                     } else {
-                        stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
                     }
                 });
             } else {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
             }
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id] [name/date/location] [query]');
@@ -35,7 +35,7 @@ module.exports = {
     modifyMeeting(stuff, id, ownerOverriden) {
         if (stuff.args[1] == 'name') {
             if (stuff.args[2].length > 64) {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Meeting name might not exceed 64 characters.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Meeting name might not exceed 64 characters.');
                 return;
             }
 
@@ -44,7 +44,7 @@ module.exports = {
             const chronoRes = stuff.chronode.parse(stuff.args[2]);
         
             if (chronoRes.length == 0) {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[2] + '"');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to find a valid date in "' + stuff.args[2] + '"');
                 return;
             }
         
@@ -80,24 +80,24 @@ module.exports = {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {  
                                     module.exports.modifyLocation(stuff, id, data[option], ownerOverriden);
                                 } else {
-                                    stuff.sendUtils.sendError(stuff.message.channel, 'Unable to get GPS data from this place.')
+                                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to get GPS data from this place.')
                                 }
                             }));
                             stuff.choiceMan.sendChoicesToChannel(stuff, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
                         }
                     } else {
-                        stuff.sendUtils.sendError(stuff.message.channel, 'No place found for query "' + stuff.args[1] + '"');
+                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'No place found for query "' + stuff.args[1] + '"');
                     } 
                 })
                 .catch(function(errorMessage) {
-                    stuff.sendUtils.sendError(stuff.message.channel, errorMessage);
+                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, errorMessage);
                 });
         } else if (stuff.args[1] == 'limit') {
             const parsedLimit = parseInt(stuff.args[2]);
             if (!isNaN(parsedLimit) && parsedLimit >= 0) {
                 module.exports.modifyLimit(stuff, id, parsedLimit, ownerOverriden)
             } else {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid join limit: **' + stuff.args[2] + '**');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid join limit: **' + stuff.args[2] + '**');
             }
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' ' + stuff.args[0], '[name/date/location/limit] [query]');
@@ -111,7 +111,7 @@ module.exports = {
                 stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The name of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Unable to modify the name of Meeting #' + id + '.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to modify the name of Meeting #' + id + '.');
                 console.log(e);
             });
     },
@@ -129,7 +129,7 @@ module.exports = {
                 stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The date of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Unable to modify the date of Meeting #' + id + '.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to modify the date of Meeting #' + id + '.');
                 console.log(e);
             });
     },
@@ -141,7 +141,7 @@ module.exports = {
                 stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The location of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Unable to modify the location of Meeting #' + id + '.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to modify the location of Meeting #' + id + '.');
                 console.log(e);
             });
     },
@@ -153,7 +153,7 @@ module.exports = {
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, message, 'Join limit modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
             })
             .catch(function(e) {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Unable to modify the join limit of Meeting #' + id + '.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to modify the join limit of Meeting #' + id + '.');
                 console.log(e);
             });
     },

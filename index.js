@@ -34,7 +34,7 @@ client.on('message', message => {
     const command = args.shift().toLowerCase();
 
     if (command != 'choice' && choiceMan.hasUserActiveChoice(message.author.id)) {
-        sendError(message.channel, 'You must select an option of your active choice before using the bot.');
+        sendUtils.sendError(message.channel, stuff.message.author.id, 'You must select an option of your active choice before using the bot.');
         return;
     }
     
@@ -84,7 +84,7 @@ client.on('message', message => {
             config: config});
     } catch (error) {
         console.error(error);
-        sendError(message.channel, "An error occured while executing this command.")
+        sendUtils.sendError(message.channel, stuff.message.author.id, "An error occured while executing this command.")
     }
 });
 

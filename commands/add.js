@@ -5,14 +5,14 @@ module.exports = {
 	execute(stuff) {
         if (stuff.args.length >= 3) {
             if (stuff.args[0].length > 64) {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Meeting name might not exceed 64 characters.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Meeting name might not exceed 64 characters.');
                 return;
             }
 
             const chronoRes = stuff.chronode.parse(stuff.args[2]);
         
             if (chronoRes.length == 0) {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[2] + '"');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to find a valid date in "' + stuff.args[2] + '"');
                 return;
             }
         
@@ -28,7 +28,7 @@ module.exports = {
                 if (!isNaN(parsedLimit) && parsedLimit >= 0) {
                     joinLimit = parsedLimit;
                 } else {
-                    stuff.sendUtils.sendError(stuff.message.channel, 'Invalid join limit: **' + stuff.args[3] + '**');
+                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid join limit: **' + stuff.args[3] + '**');
                     return;
                 }
             }
@@ -42,7 +42,7 @@ module.exports = {
                             if (actualFeature.hasOwnProperty('geometry') && actualFeature.geometry.hasOwnProperty('coordinates')) {  
                                 stuff.meetingMan.addMeeting(stuff, stuff.args[0], actualFeature, startDate, endDate, stuff.message.author.id, joinLimit);
                             } else {
-                                stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.channel, 'Unable to get GPS data from this place.')
+                                stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Unable to get GPS data from this place.')
                             }
                         } else {
                             var choiceTexts = [];
@@ -57,17 +57,17 @@ module.exports = {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {  
                                     stuff.meetingMan.addMeeting(stuff, stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, joinLimit);
                                 } else {
-                                    stuff.sendUtils.sendError(stuff.message.channel, 'Unable to get GPS data from this place.')
+                                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to get GPS data from this place.')
                                 }
                             }));
                             stuff.choiceMan.sendChoicesToChannel(stuff, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
                         }
                     } else {
-                        stuff.sendUtils.sendError(stuff.message.channel, 'No place found for query "' + stuff.args[1] + '"');
+                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'No place found for query "' + stuff.args[1] + '"');
                     } 
                 })
                 .catch(function(errorMessage) {
-                    stuff.sendUtils.sendError(stuff.message.channel, errorMessage);
+                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, errorMessage);
                 });
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[name] [location] [start _(and end)_ date] _(join limit)_');

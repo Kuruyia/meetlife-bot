@@ -11,10 +11,10 @@ module.exports = {
                         stuff.sendUtils.sendConfirmation(stuff.message.channel, 'You have joined Meeting #' + meetingId);
                     })
                     .catch(function(error) {
-                        stuff.sendUtils.sendError(stuff.message.channel, error);
+                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, error);
                     });
             } else {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
             }
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id]');

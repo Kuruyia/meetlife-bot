@@ -39,18 +39,18 @@ module.exports = {
                                         stuff.sendUtils.sendConfirmation(stuff.message.channel, 'This Meeting has been removed.', 'Meeting #' + meetingId, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
                                         stuff.sendUtils.notifyUsers(stuff.message.author.id, stuff.client, meetingId, joinedUsers.users, 'A Meeting you have joined has been removed.', meetingData.dataValues);
                                     } else {
-                                        stuff.sendUtils.sendError(stuff.message.channel, 'This Meeting could not be deleted.');
+                                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'This Meeting could not be deleted.');
                                     }
                                 });
                         } else {
-                            stuff.sendUtils.sendError(stuff.message.channel, 'You can\'t delete this Meeting because you don\'t own it.');
+                            stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'You can\'t delete this Meeting because you don\'t own it.');
                         }
                     } else {
-                        stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
                     }
                 });
             } else {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
             }
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id]');

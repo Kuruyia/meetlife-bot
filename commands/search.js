@@ -10,7 +10,7 @@ module.exports = {
             if (!isNaN(parsedPage) && parsedPage > 0) {
                 page = parsedPage - 1;
             } else {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[2] + '**');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid page: **' + stuff.args[2] + '**');
                 return;
             }
         }
@@ -36,7 +36,7 @@ module.exports = {
                 const chronoRes = stuff.chronode.parse(stuff.args[1]);
 
                 if (chronoRes.length == 0) {
-                    stuff.sendUtils.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[1] + '"');
+                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to find a valid date in "' + stuff.args[1] + '"');
                     return;
                 }
 

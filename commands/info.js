@@ -14,19 +14,19 @@ module.exports = {
                         if (!isNaN(parsedPage) && parsedPage > 0) {
                             page = parsedPage - 1;
                         } else {
-                            stuff.sendUtils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[2] + '**');
+                            stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid page: **' + stuff.args[2] + '**');
                             return;
                         }
                     }
 
-                    stuff.sendUtils.sendMeetingMembersPanel(stuff.message.channel, meetingId, page);
+                    stuff.sendUtils.sendMeetingMembersPanel(stuff.message.channel, stuff.message.author.id, meetingId, page);
                 } else if (stuff.args.length < 2 || stuff.args[1] == 'info') {
                     stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, meetingId);
                 } else {
                     stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
                 }
             } else {
-                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
             }
         } else {
             stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
