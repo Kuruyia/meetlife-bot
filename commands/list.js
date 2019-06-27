@@ -17,9 +17,7 @@ module.exports = {
         }
 
         if (stuff.args.length >= 2) {
-            console.log('slt')
             if (stuff.args[1].toLowerCase() == 'd') {
-                console.log('dab')
                 isDesc = true;
             } else if (stuff.args[1].toLowerCase() != 'a') {
                 stuff.utils.sendError(stuff.message.channel, 'Invalid input: The second argument must be either _d_ for descending or _a_ for ascending.');
