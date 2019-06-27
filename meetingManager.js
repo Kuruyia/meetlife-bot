@@ -193,7 +193,7 @@ module.exports = function(dbObjects) {
                     if (!hasJoined) {
                         return this.isMeetingFull(meetingId);
                     } else {
-                        throw 'You already have joined this Meeting.';
+                        throw '<@' + userId + '> is already in this Meeting.';
                     }
                 }).then(isFull => {
                     if (!isFull) {
@@ -233,7 +233,7 @@ module.exports = function(dbObjects) {
                             }
                         });
                     } else {
-                        throw 'You are not in this Meeting.';
+                        throw '<@' + userId + '> is not in this Meeting.';
                     }
                 }).then(result => {
                     resolve();
