@@ -147,11 +147,16 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
     }
 
     this.sendInfoPanelFromData = function(authorId, channel, data, message) {
+        const actualTime = new Date().getTime() / 1000;
         const constructedEmbed = new this.discord.RichEmbed();
         constructedEmbed.setColor('BLUE');
         constructedEmbed.setTitle('📅   Meeting #' + data.id + ': ' + data.name);
         constructedEmbed.setURL('http://www.google.com/maps/place/' + data.latitude + ',' + data.longitude);
 
+        if (actualTime > data.start_time) {
+            constructedEmbed.addField('Status', '**Finished**');
+        }
+        
         if (data.end_time) {
             var startDate = new Date(data.start_time * 1000);
             var endDate = new Date(data.end_time * 1000);
