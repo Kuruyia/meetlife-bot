@@ -10,7 +10,11 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         constructedEmbed.setColor('RED');
         constructedEmbed.addField(title, message);
     
-        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        if (authorId) {
+            channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        } else {
+            channel.send(constructedEmbed);
+        }
     },
     
     this.sendConfirmation = function(channel, authorId, message, title = 'Confirmation', footer = null) {
@@ -22,7 +26,11 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             constructedEmbed.setFooter(footer);
         }
     
-        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        if (authorId) {
+            channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        } else {
+            channel.send(constructedEmbed);
+        }
     },
     
     this.sendUsage = function(channel, authorId, command, message) {
@@ -40,7 +48,11 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             constructedEmbed.addField('Usage', '**' + this.prefix + command + '** ' + message);
         }
     
-        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        if (authorId) {
+            channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        } else {
+            channel.send(constructedEmbed);
+        }
     },
 
     this.sendPagedList = function(channel, authorId, textList, title, footer = null, count = textList.length, page = 1) {
@@ -92,7 +104,11 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             }
         }
 
-        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        if (authorId) {
+            channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+        } else {
+            channel.send(constructedEmbed);
+        }
     },
 
     this.formatDate = function(startDate, endDate) {
@@ -176,7 +192,11 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                 if (message) {
                     channel.send('<@' + authorId + '> - ' + message, {embed: constructedEmbed});
                 } else {
-                    channel.send('<@' + authorId + '> - ', {embed: constructedEmbed});
+                    if (authorId) {
+                        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
+                    } else {
+                        channel.send(constructedEmbed);
+                    }
                 }
             });
     }
