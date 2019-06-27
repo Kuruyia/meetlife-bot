@@ -171,7 +171,7 @@ module.exports = function(dbObjects) {
         });
     }
 
-    this.joinUserToMeeting = function(userId, meetingId) {
+    this.joinUserToMeeting = function(userId, meetingId, notificationDelay = 1) {
         return new Promise((resolve, reject) => {
             this.doesMeetingExists(meetingId)
                 .then(exists => {
@@ -190,7 +190,8 @@ module.exports = function(dbObjects) {
                     if (!isFull) {
                         this.dbObjects.JoinedMeetings.create({
                             user_id: userId,
-                            upcoming_meeting_id: meetingId
+                            upcoming_meeting_id: meetingId,
+                            notify_delay: notificationDelay
                         }).then(response => {
                             resolve();
                         }).catch(error => {
