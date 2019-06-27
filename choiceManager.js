@@ -23,7 +23,7 @@ module.exports = function() {
                 texts.push('**#' + (i + 1) + '** - ' + selectedUser.choiceTexts[i]);
             }
 
-            stuff.utils.sendPagedList(channel, texts, selectedUser.choiceTitle, 'You can choose with "' + prefix + 'choice choose [1-' + selectedUser.data.length + ']" or cancel with "' + prefix + 'choice cancel"');
+            stuff.sendUtils.sendPagedList(channel, texts, selectedUser.choiceTitle, 'You can choose with "' + prefix + 'choice choose [1-' + selectedUser.data.length + ']" or cancel with "' + prefix + 'choice cancel"');
 
             return true;
         } else {

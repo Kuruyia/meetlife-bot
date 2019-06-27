@@ -14,7 +14,7 @@ module.exports = {
                         if (!isNaN(parsedPage) && parsedPage > 0) {
                             page = parsedPage - 1;
                         } else {
-                            stuff.utils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[2] + '**');
+                            stuff.sendUtils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[2] + '**');
                             return;
                         }
                     }
@@ -23,13 +23,13 @@ module.exports = {
                 } else if (stuff.args.length < 2 || stuff.args[1] == 'info') {
                     stuff.meetingMan.sendInfoPanel(stuff, stuff.message.channel, meetingId);
                 } else {
-                    stuff.utils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
+                    stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
                 }
             } else {
-                stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
             }
         } else {
-            stuff.utils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
+            stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
         }
 	},
 };

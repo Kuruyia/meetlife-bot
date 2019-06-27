@@ -8,16 +8,16 @@ module.exports = {
             if (!isNaN(meetingId)) {
                 stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId)
                     .then(function() {
-                        stuff.utils.sendConfirmation(stuff.message.channel, 'You have joined Meeting #' + meetingId);
+                        stuff.sendUtils.sendConfirmation(stuff.message.channel, 'You have joined Meeting #' + meetingId);
                     })
                     .catch(function(error) {
-                        stuff.utils.sendError(stuff.message.channel, error);
+                        stuff.sendUtils.sendError(stuff.message.channel, error);
                     });
             } else {
-                stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
             }
         } else {
-            stuff.utils.sendUsage(stuff.message.channel, this.name, '[meeting id]');
+            stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id]');
         }
 	},
 };

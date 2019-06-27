@@ -11,7 +11,7 @@ module.exports = {
             if (!isNaN(parsedPage) && parsedPage > 0) {
                 page = parsedPage - 1;
             } else {
-                stuff.utils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[0] + '**');
+                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[0] + '**');
                 return;
             }
         }
@@ -20,7 +20,7 @@ module.exports = {
             if (stuff.args[1].toLowerCase() == 'd') {
                 isDesc = true;
             } else if (stuff.args[1].toLowerCase() != 'a') {
-                stuff.utils.sendError(stuff.message.channel, 'Invalid input: The second argument must be either _d_ for descending or _a_ for ascending.');
+                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid input: The second argument must be either _d_ for descending or _a_ for ascending.');
                 return;
             }
         }

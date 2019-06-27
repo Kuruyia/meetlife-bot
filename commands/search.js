@@ -10,7 +10,7 @@ module.exports = {
             if (!isNaN(parsedPage) && parsedPage > 0) {
                 page = parsedPage - 1;
             } else {
-                stuff.utils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[2] + '**');
+                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[2] + '**');
                 return;
             }
         }
@@ -29,14 +29,14 @@ module.exports = {
                     stuff.meetingMan.sendSearchResult(stuff, searchResults.rows, 'Search by location - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
                 });
             } else {
-                stuff.utils.sendUsage(stuff.message.channel, this.name + ' location', '[location] _(page)_');
+                stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' location', '[location] _(page)_');
             }
         } else if (stuff.args[0] == 'day') {
             if (stuff.args.length >= 2) {
                 const chronoRes = stuff.chronode.parse(stuff.args[1]);
 
                 if (chronoRes.length == 0) {
-                    stuff.utils.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[1] + '"');
+                    stuff.sendUtils.sendError(stuff.message.channel, 'Unable to find a valid date in "' + stuff.args[1] + '"');
                     return;
                 }
 
@@ -60,7 +60,7 @@ module.exports = {
                     stuff.meetingMan.sendSearchResult(stuff, searchResults.rows, 'Search by day - ' + queryDate.toLocaleDateString(stuff.config.locale), null, searchResults.count, page + 1);
                 });
             } else {
-                stuff.utils.sendUsage(stuff.message.channel, this.name + ' day', '[date] _(page)_');
+                stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' day', '[date] _(page)_');
             }
         } else if (stuff.args[0] == 'owner') {
             if (stuff.args.length >= 2 && stuff.message.mentions.members.length > 0) {
@@ -76,7 +76,7 @@ module.exports = {
                     stuff.meetingMan.sendSearchResult(stuff, searchResults.rows, 'Search by owner - @' + stuff.message.mentions.members.first().user.tag, null, searchResults.count, page + 1);
                 });
             } else {
-                stuff.utils.sendUsage(stuff.message.channel, this.name + ' owner', '[owner mention] _(page)_');
+                stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' owner', '[owner mention] _(page)_');
             }
         } else if (stuff.args[0] == 'name') {
             if (stuff.args.length >= 2) {
@@ -92,10 +92,10 @@ module.exports = {
                     stuff.meetingMan.sendSearchResult(stuff, searchResults.rows, 'Search by name - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
                 });
             } else {
-                stuff.utils.sendUsage(stuff.message.channel, this.name + ' name', '[meeting name] _(page)_');
+                stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' name', '[meeting name] _(page)_');
             }
         } else {
-            stuff.utils.sendUsage(stuff.message.channel, this.name, '[location/day/owner/name] [query] _(page)_');
+            stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[location/day/owner/name] [query] _(page)_');
         }
 	},
 };

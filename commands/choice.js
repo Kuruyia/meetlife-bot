@@ -13,19 +13,19 @@ module.exports = {
                 stuff.message.reply(data[option]);
             }));
             if (rep != true) {
-                stuff.utils.sendError(stuff.message.channel, rep);
+                stuff.sendUtils.sendError(stuff.message.channel, rep);
             }
 
             console.log(tst);
         } else if (stuff.args[0] == 'list') {
             const rep = stuff.choiceMan.sendChoicesToChannel(stuff, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
             if (rep != true) {
-                stuff.utils.sendError(stuff.message.channel, rep);
+                stuff.sendUtils.sendError(stuff.message.channel, rep);
             }
         } else if (stuff.args[0] == 'cancel') {
             const rep = stuff.choiceMan.cancel(stuff.message.author.id);
             if (rep != true) {
-                stuff.utils.sendError(stuff.message.channel, rep);
+                stuff.sendUtils.sendError(stuff.message.channel, rep);
             } else {
                 const constructedEmbed = new stuff.discord.RichEmbed();
                 constructedEmbed.setColor('BLUE');
@@ -36,7 +36,7 @@ module.exports = {
         } else if (stuff.args[0] == 'choose') {
             const rep = stuff.choiceMan.choose(stuff.message.author.id, stuff.args[1]);
             if (rep != true) {
-                stuff.utils.sendError(stuff.message.channel, rep);
+                stuff.sendUtils.sendError(stuff.message.channel, rep);
             }
         }
 	},

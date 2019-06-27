@@ -45,21 +45,21 @@ module.exports = {
                                         stuff.message.channel.send(constructedEmbed);
                                         stuff.meetingMan.notifyUsers(stuff, stuff.client, meetingId, joinedUsers.users, 'A meeting you have joined has been removed.', meetingData.dataValues);
                                     } else {
-                                        stuff.utils.sendError(stuff.message.channel, 'This meeting could not be deleted.');
+                                        stuff.sendUtils.sendError(stuff.message.channel, 'This meeting could not be deleted.');
                                     }
                                 });
                         } else {
-                            stuff.utils.sendError(stuff.message.channel, 'You can\'t delete this meeting because you don\'t own it.');
+                            stuff.sendUtils.sendError(stuff.message.channel, 'You can\'t delete this meeting because you don\'t own it.');
                         }
                     } else {
-                        stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                        stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
                     }
                 });
             } else {
-                stuff.utils.sendError(stuff.message.channel, 'Invalid meeting id.');
+                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid meeting id.');
             }
         } else {
-            stuff.utils.sendUsage(stuff.message.channel, this.name, '[meeting id]');
+            stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id]');
         }
 	},
 };

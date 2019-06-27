@@ -10,7 +10,7 @@ module.exports = {
             if (!isNaN(parsedPage) && parsedPage > 0) {
                 page = parsedPage - 1;
             } else {
-                stuff.utils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[0] + '**');
+                stuff.sendUtils.sendError(stuff.message.channel, 'Invalid page: **' + stuff.args[0] + '**');
                 return;
             }
         }

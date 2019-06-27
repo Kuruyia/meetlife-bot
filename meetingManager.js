@@ -54,7 +54,7 @@ module.exports = function(dbObjects) {
             resultList.push(message);
         }
 
-        stuff.utils.sendPagedList(stuff.message.channel, resultList, title, footer, count, page);
+        stuff.sendUtils.sendPagedList(stuff.message.channel, resultList, title, footer, count, page);
     }
 
     this.sendInfoPanelFromData = function(stuff, channel, data, message) {
@@ -66,10 +66,10 @@ module.exports = function(dbObjects) {
         if (data.end_time) {
             var startDate = new Date(data.start_time * 1000);
             var endDate = new Date(data.end_time * 1000);
-            constructedEmbed.addField('Date', stuff.utils.formatDate(startDate, endDate), true);
+            constructedEmbed.addField('Date', stuff.sendUtils.formatDate(startDate, endDate), true);
         } else {
             var startDate = new Date(data.start_time * 1000);
-            constructedEmbed.addField('Date', stuff.utils.formatDate(startDate), true);
+            constructedEmbed.addField('Date', stuff.sendUtils.formatDate(startDate), true);
         }
 
         constructedEmbed.addField('Owner', '<@' + data.owner_id + '>', true)
@@ -114,10 +114,10 @@ module.exports = function(dbObjects) {
                 if (result) {
                     this.sendInfoPanelFromData(stuff, channel, result.dataValues, message);
                 } else {
-                    stuff.utils.sendError(channel, 'Invalid meeting id.');
+                    stuff.sendUtils.sendError(channel, 'Invalid meeting id.');
                 }
             }).catch(e => {
-                stuff.utils.sendError(channel, 'An error has occured: ' + e);
+                stuff.sendUtils.sendError(channel, 'An error has occured: ' + e);
             });
     }
 
@@ -130,12 +130,12 @@ module.exports = function(dbObjects) {
                         textList.push('<@' + result.users[i] + '>');
                     }
 
-                    stuff.utils.sendPagedList(stuff.message.channel, textList, 'Members in Meeting #' + meetingId, null, result.count, page + 1);
+                    stuff.sendUtils.sendPagedList(stuff.message.channel, textList, 'Members in Meeting #' + meetingId, null, result.count, page + 1);
                 } else {
-                    stuff.utils.sendConfirmation(stuff.message.channel, 'No user has joined this Meeting.', 'Members in Meeting #' + meetingId);
+                    stuff.sendUtils.sendConfirmation(stuff.message.channel, 'No user has joined this Meeting.', 'Members in Meeting #' + meetingId);
                 }
             }).catch(e => {
-                stuff.utils.sendError(stuff.message.channel, 'An error has occured: ' + e);
+                stuff.sendUtils.sendError(stuff.message.channel, 'An error has occured: ' + e);
             });
     }
 
@@ -401,7 +401,7 @@ module.exports = function(dbObjects) {
         Promise.all(usersLookup)
             .then(result => {
                 for (i = 0; i < result.length; i++) {
-                    stuff.utils.sendConfirmation(result[i], message, 'Notification');
+                    stuff.sendUtils.sendConfirmation(result[i], message, 'Notification');
                     if (data) {
                         this.sendInfoPanelFromData(stuff, result[i], data);
                     } else {
