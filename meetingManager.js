@@ -249,45 +249,45 @@ module.exports = function(dbObjects) {
                 reject(e);
             });
         })
+    }
 
-        this.hasUserJoinedMeeting = function(userId, meetingId) {
-            return new Promise((resolve, reject) => {
-                this.dbObjects.JoinedMeetings.count({
+    this.hasUserJoinedMeeting = function(userId, meetingId) {
+        return new Promise((resolve, reject) => {
+            this.dbObjects.JoinedMeetings.count({
+                where: {
+                    user_id: userId,
+                    upcoming_meeting_id: meetingId
+                }
+            }).then(count => {
+                resolve(count >= 1);
+            });
+        });
+    }
+
+    this.countMeetingMembers = function(meetingId) {
+        return new Promise((resolve, reject) => {
+            this.dbObjects.JoinedMeetings.count({
+                where: {
+                    upcoming_meeting_id: meetingId
+                }
+            }).then(joinCount => {
+                resolve(joinCount);
+            });
+        });
+    }
+
+    this.isMeetingFull = function(meetingId) {
+        return new Promise((resolve, reject) => {
+            this.countMeetingMembers(meetingId).then(joinCount => {
+                this.dbObjects.UpcomingMeetings.findOne({
                     where: {
-                        user_id: userId,
-                        upcoming_meeting_id: meetingId
+                        id: meetingId
                     }
-                }).then(count => {
-                    resolve(count >= 1);
+                }).then(result => {
+                    const joinLimit = result.dataValues.join_limit;
+                    resolve(joinLimit > 0 && joinCount >= joinLimit);
                 });
             });
-        }
-    
-        this.countMeetingMembers = function(meetingId) {
-            return new Promise((resolve, reject) => {
-                this.dbObjects.JoinedMeetings.count({
-                    where: {
-                        upcoming_meeting_id: meetingId
-                    }
-                }).then(joinCount => {
-                    resolve(joinCount);
-                });
-            });
-        }
-    
-        this.isMeetingFull = function(meetingId) {
-            return new Promise((resolve, reject) => {
-                this.countMeetingMembers(meetingId).then(joinCount => {
-                    this.dbObjects.UpcomingMeetings.findOne({
-                        where: {
-                            id: meetingId
-                        }
-                    }).then(result => {
-                        const joinLimit = result.dataValues.join_limit;
-                        resolve(joinLimit > 0 && joinCount >= joinLimit);
-                    });
-                });
-            });
-        }
+        });
     }
 }
