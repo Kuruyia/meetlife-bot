@@ -1,29 +1,33 @@
 module.exports = function(dbObjects) {
     this.dbObjects = dbObjects;
 
-    this.addMeeting = function(stuff, name, feature, startDate, endDate, ownerId, joinLimit = 0) {
-        var locationLabel, locationName;
-        if (feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('geocoding')) {
-            if (feature.properties.geocoding.hasOwnProperty('label')) {
-                locationLabel = feature.properties.geocoding.label;
+    this.addMeeting = function(name, feature, startDate, endDate, ownerId, joinLimit = 0) {
+        return new Promise((resolve, reject) => {
+            var locationLabel, locationName;
+            if (feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('geocoding')) {
+                if (feature.properties.geocoding.hasOwnProperty('label')) {
+                    locationLabel = feature.properties.geocoding.label;
+                }
+                if (feature.properties.geocoding.hasOwnProperty('name')) {
+                    locationName = feature.properties.geocoding.name;
+                }
             }
-            if (feature.properties.geocoding.hasOwnProperty('name')) {
-                locationName = feature.properties.geocoding.name;
-            }
-        }
 
-        this.dbObjects.UpcomingMeetings.create({
-            name: name,
-            start_time: startDate,
-            end_time: endDate,
-            longitude: feature.geometry.coordinates[0],
-            latitude: feature.geometry.coordinates[1],
-            owner_id: ownerId,
-            join_limit: joinLimit,
-            location_name: locationLabel,
-            location_name_short: locationName
-        }).then(response => {
-            stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, response.dataValues.id, 'Your Meeting has been created meeting!');
+            this.dbObjects.UpcomingMeetings.create({
+                name: name,
+                start_time: startDate,
+                end_time: endDate,
+                longitude: feature.geometry.coordinates[0],
+                latitude: feature.geometry.coordinates[1],
+                owner_id: ownerId,
+                join_limit: joinLimit,
+                location_name: locationLabel,
+                location_name_short: locationName
+            }).then(response => {
+                resolve(response);
+            }).catch(e => {
+                reject(e);
+            });
         });
     }
 
