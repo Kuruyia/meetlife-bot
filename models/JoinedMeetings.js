@@ -5,6 +5,14 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			unique: 'uniqueJoin'
 		},
+		notified: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
+		},
+		notify_delay: {
+			type: DataTypes.REAL,
+			defaultValue: 1
+		}
 	}, {
 		timestamps: false,
 	});
