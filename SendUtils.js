@@ -62,6 +62,16 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         if (textList.length > 0) {
             constructedEmbed.setColor('BLUE');
 
+            var footerText = '';
+            if (footer) {
+                footerText = footerText.concat(footer + ' - ')
+            }
+            footerText = footerText.concat(count + (count > 1 ? ' results' : ' result'));
+            if (count != textList.length) {
+                footerText = footerText.concat(', ' + textList.length + ' shown');
+                title = title.concat(' [' + page + '/' + maxPage + ']');
+            }
+
             var textLength = 0;
             var message = '';
             var isFirstField = true;
@@ -80,17 +90,6 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             }
             if (message.length > 0) {
                 constructedEmbed.addField(isFirstField ? title : '\u200B', message);
-            }
-
-            var footerText = '';
-            if (footer) {
-                footerText = footerText.concat(footer + ' - ')
-            }
-            footerText = footerText.concat(count + (count > 1 ? ' results' : ' result'));
-            if (count != textList.length) {
-                footerText = footerText.concat(', ' + textList.length + ' shown');
-
-                title = title.concat(' [' + page + '/' + maxPage + ']');
             }
 
             constructedEmbed.setFooter(footerText);
