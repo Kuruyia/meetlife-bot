@@ -23,13 +23,13 @@ module.exports = {
                 } else if (stuff.args.length < 2 || stuff.args[1] == 'info') {
                     stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, meetingId);
                 } else {
-                    stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
+                    stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id] _(info/members)_');
                 }
             } else {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
             }
         } else {
-            stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id] _(info/members)_');
+            stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id] _(info/members)_');
         }
 	},
 };

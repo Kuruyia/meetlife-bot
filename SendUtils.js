@@ -25,7 +25,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         channel.send('<@' + authorId + '>', {embed: constructedEmbed});
     },
     
-    this.sendUsage = function(channel, command, message) {
+    this.sendUsage = function(channel, authorId, command, message) {
         const constructedEmbed = new this.discord.RichEmbed();
         constructedEmbed.setColor('ORANGE');
         
@@ -40,7 +40,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             constructedEmbed.addField('Usage', '**' + this.prefix + command + '** ' + message);
         }
     
-        channel.send(constructedEmbed);
+        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
     },
 
     this.sendPagedList = function(channel, textList, title, footer = null, count = textList.length, page = 1) {

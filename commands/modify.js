@@ -28,7 +28,7 @@ module.exports = {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid meeting id.');
             }
         } else {
-            stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[meeting id] [name/date/location] [query]');
+            stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[meeting id] [name/date/location] [query]');
         }
     },
     
@@ -100,7 +100,7 @@ module.exports = {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid join limit: **' + stuff.args[2] + '**');
             }
         } else {
-            stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' ' + stuff.args[0], '[name/date/location/limit] [query]');
+            stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name + ' ' + stuff.args[0], '[name/date/location/limit] [query]');
         }
     },
 

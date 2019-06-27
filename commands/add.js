@@ -70,7 +70,7 @@ module.exports = {
                     stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, errorMessage);
                 });
         } else {
-            stuff.sendUtils.sendUsage(stuff.message.channel, this.name, '[name] [location] [start _(and end)_ date] _(join limit)_');
+            stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name, '[name] [location] [start _(and end)_ date] _(join limit)_');
         }
 	},
 };
