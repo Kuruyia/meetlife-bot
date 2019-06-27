@@ -174,9 +174,9 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                 constructedEmbed.addField('Members', membersText, true);
 
                 if (message) {
-                    channel.send(message, {embed: constructedEmbed});
+                    channel.send('<@' + authorId + '> - ' + message, {embed: constructedEmbed});
                 } else {
-                    channel.send(constructedEmbed);
+                    channel.send('<@' + authorId + '> - ', {embed: constructedEmbed});
                 }
             });
     }

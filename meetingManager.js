@@ -23,7 +23,7 @@ module.exports = function(dbObjects) {
             location_name: locationLabel,
             location_name_short: locationName
         }).then(response => {
-            stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
+            stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, response.dataValues.id, 'Your Meeting has been created meeting!');
         });
     }
 
