@@ -37,7 +37,7 @@ module.exports = {
                                         const ownerOverriden = ownerId != stuff.message.author.id && stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES);
                                         
                                         stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, 'This Meeting has been removed.', 'Meeting #' + meetingId, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
-                                        stuff.sendUtils.notifyUsers(stuff.message.author.id, stuff.client, joinedUsers.users, 'A Meeting you have joined has been removed.', meetingId, meetingData.dataValues);
+                                        stuff.sendUtils.notifyUsers(stuff.client, joinedUsers.users, 'A Meeting you have joined has been removed.', meetingId, meetingData.dataValues);
                                     } else {
                                         stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'This Meeting could not be deleted.');
                                     }

@@ -232,33 +232,33 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             });
     }
 
-    this.notifyUser = function(authorId, client, userId, message, meetingId = null, data = null) {
+    this.notifyUser = function(client, userId, message, meetingId = null, data = null) {
         return new Promise((resolve, reject) => {
             client.fetchUser(userId)
                 .then(result => {
-                    this.sendConfirmation(result, authorId, message, 'Notification');
+                    this.sendConfirmation(result, null, message, 'Notification');
                     
                     if (meetingId) {
                         if (data) {
-                            this.sendInfoPanelFromData(authorId, result, data);
+                            this.sendInfoPanelFromData(null, result, data);
                         } else {
-                            this.sendInfoPanel(authorId, result, meetingId);
+                            this.sendInfoPanel(null, result, meetingId);
                         }
                     }
                 }).catch(() => undefined);
         });
     }
 
-    this.notifyUsers = function(authorId, client, userIdList, message, meetingId = null, data = null) {
+    this.notifyUsers = function(client, userIdList, message, meetingId = null, data = null) {
         for (i = 0; i < userIdList.length; i++) {
-            this.notifyUser(authorId, client, userIdList[i], message, meetingId, data);
+            this.notifyUser(client, userIdList[i], message, meetingId, data);
         }
     }
 
-    this.notifyUsersInMeeting = function(authorId, client, message, meetingId = null, data = null) {
+    this.notifyUsersInMeeting = function(client, message, meetingId = null, data = null) {
         this.meetingManager.getUsersInMeeting(meetingId)
             .then(result => {
-                this.notifyUsers(authorId, client, result.users, message, meetingId, data)
+                this.notifyUsers(client, result.users, message, meetingId, data)
             }).catch(e => {
                 console.log('Error while notifying users: ' + e);
             });
