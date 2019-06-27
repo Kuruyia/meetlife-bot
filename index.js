@@ -94,7 +94,7 @@ var Utils = {
         } else {
             constructedEmbed.setColor('RED');
 
-            if (page > maxPage) {
+            if (page > maxPage && maxPage > 0) {
                 constructedEmbed.addField(title, 'This page does not exist. (Max. **' + maxPage + '**)');
             } else {
                 constructedEmbed.addField(title, 'No result found.');
