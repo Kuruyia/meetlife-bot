@@ -40,7 +40,11 @@ The bot comes with an integrated help panel, just type this command in any chann
 
 ## Acknowledgments
 [Discord.js](https://github.com/discordjs/discord.js/) - The library used to interact with Discord
+
 [chrono-node](https://github.com/wanasit/chrono) - Parses natural date to prevent having the user to follow a format
+
 [request](https://github.com/request/request) - Simplifies the use of HTTP requests
+
 [OpenStreetMap Nominatim](https://wiki.openstreetmap.org/wiki/Nominatim) - Online API to search for places in the world
+
 [sequelize](https://github.com/sequelize/sequelize) - Used to store data in a local database
