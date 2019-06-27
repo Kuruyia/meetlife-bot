@@ -1,5 +1,6 @@
-module.exports = function(discord, prefix, locale, listLimit) {
+module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
     this.discord = discord;
+    this.meetingManager = meetingManager;
     this.prefix = prefix;
     this.locale = locale;
     this.listLimit = listLimit;
@@ -127,5 +128,69 @@ module.exports = function(discord, prefix, locale, listLimit) {
         }
 
         this.sendPagedList(channel, resultList, title, footer, count, page);
+    }
+
+    this.sendInfoPanelFromData = function(authorId, channel, data, message) {
+        const constructedEmbed = new this.discord.RichEmbed();
+        constructedEmbed.setColor('BLUE');
+        constructedEmbed.setTitle('📅   Meeting #' + data.id + ': ' + data.name);
+        constructedEmbed.setURL('http://www.google.com/maps/place/' + data.latitude + ',' + data.longitude);
+
+        if (data.end_time) {
+            var startDate = new Date(data.start_time * 1000);
+            var endDate = new Date(data.end_time * 1000);
+            constructedEmbed.addField('Date', this.formatDate(startDate, endDate), true);
+        } else {
+            var startDate = new Date(data.start_time * 1000);
+            constructedEmbed.addField('Date', this.formatDate(startDate), true);
+        }
+
+        constructedEmbed.addField('Owner', '<@' + data.owner_id + '>', true)
+
+        if (data.location_name_short) {
+            constructedEmbed.addField('Location', '**' + data.location_name_short + '**\n' + data.latitude + ', ' + data.longitude, true);
+        } else {
+            constructedEmbed.addField('Location', data.latitude + ', ' + data.longitude, true);
+        }
+
+        this.meetingManager.countMeetingMembers(data.id)
+            .then(memberCount => {
+                return Promise.all([memberCount, this.meetingManager.hasUserJoinedMeeting(authorId, data.id)]);
+            }).then(result => {
+                const memberCount = result.shift();
+                const joined = result.shift();
+
+                var membersText = '';
+                if (joined) {
+                    membersText = membersText.concat('**You are in this Meeting**\n');
+                }
+
+                membersText = membersText.concat(memberCount);
+                if (data.join_limit > 0) {
+                    membersText = membersText.concat('/' + data.join_limit);
+                }
+                membersText = membersText.concat(' joined');
+
+                constructedEmbed.addField('Members', membersText, true);
+
+                if (message) {
+                    channel.send(message, {embed: constructedEmbed});
+                } else {
+                    channel.send(constructedEmbed);
+                }
+            });
+    }
+
+    this.sendInfoPanel = function(authorId, channel, id, message) {
+        this.meetingManager.getMeetingData(id)
+            .then(result => {
+                if (result) {
+                    this.sendInfoPanelFromData(authorId, channel, result.dataValues, message);
+                } else {
+                    this.sendError(channel, 'Invalid meeting id.');
+                }
+            }).catch(e => {
+                this.sendError(channel, 'An error has occured: ' + e);
+            });
     }
 }

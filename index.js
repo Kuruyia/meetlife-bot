@@ -11,7 +11,7 @@ const config = require('./config.json');
 
 const choiceMan = new ChoiceManager();
 const meetingMan = new MeetingManager(dbObjects);
-const sendUtils = new SendUtils(Discord, config.prefix, config.locale, config.search_limit);
+const sendUtils = new SendUtils(Discord, meetingMan, config.prefix, config.locale, config.search_limit);
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 

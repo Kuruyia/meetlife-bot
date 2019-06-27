@@ -23,7 +23,7 @@ module.exports = function(dbObjects) {
             location_name: locationLabel,
             location_name_short: locationName
         }).then(response => {
-            this.sendInfoPanel(stuff, stuff.message.channel, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
+            stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, response.dataValues.id, '<@' + stuff.message.author.id + '> has created a new meeting!');
         });
     }
 
@@ -39,70 +39,6 @@ module.exports = function(dbObjects) {
                 reject(e);
             });
         });
-    }
-
-    this.sendInfoPanelFromData = function(stuff, channel, data, message) {
-        const constructedEmbed = new stuff.discord.RichEmbed();
-        constructedEmbed.setColor('BLUE');
-        constructedEmbed.setTitle('📅   Meeting #' + data.id + ': ' + data.name);
-        constructedEmbed.setURL('http://www.google.com/maps/place/' + data.latitude + ',' + data.longitude);
-
-        if (data.end_time) {
-            var startDate = new Date(data.start_time * 1000);
-            var endDate = new Date(data.end_time * 1000);
-            constructedEmbed.addField('Date', stuff.sendUtils.formatDate(startDate, endDate), true);
-        } else {
-            var startDate = new Date(data.start_time * 1000);
-            constructedEmbed.addField('Date', stuff.sendUtils.formatDate(startDate), true);
-        }
-
-        constructedEmbed.addField('Owner', '<@' + data.owner_id + '>', true)
-
-        if (data.location_name_short) {
-            constructedEmbed.addField('Location', '**' + data.location_name_short + '**\n' + data.latitude + ', ' + data.longitude, true);
-        } else {
-            constructedEmbed.addField('Location', data.latitude + ', ' + data.longitude, true);
-        }
-
-        this.countMeetingMembers(data.id)
-            .then(memberCount => {
-                return Promise.all([memberCount, this.hasUserJoinedMeeting(stuff.message.author.id, data.id)]);
-            }).then(result => {
-                const memberCount = result.shift();
-                const joined = result.shift();
-
-                var membersText = '';
-                if (joined) {
-                    membersText = membersText.concat('**You are in this Meeting**\n');
-                }
-
-                membersText = membersText.concat(memberCount);
-                if (data.join_limit > 0) {
-                    membersText = membersText.concat('/' + data.join_limit);
-                }
-                membersText = membersText.concat(' joined');
-
-                constructedEmbed.addField('Members', membersText, true);
-
-                if (message) {
-                    channel.send(message, {embed: constructedEmbed});
-                } else {
-                    channel.send(constructedEmbed);
-                }
-            });
-    }
-    
-    this.sendInfoPanel = function(stuff, channel, id, message) {
-        this.getMeetingData(id)
-            .then(result => {
-                if (result) {
-                    this.sendInfoPanelFromData(stuff, channel, result.dataValues, message);
-                } else {
-                    stuff.sendUtils.sendError(channel, 'Invalid meeting id.');
-                }
-            }).catch(e => {
-                stuff.sendUtils.sendError(channel, 'An error has occured: ' + e);
-            });
     }
 
     this.sendMeetingMembersPanel = function(stuff, client, meetingId, page = 0) {
@@ -387,9 +323,9 @@ module.exports = function(dbObjects) {
                 for (i = 0; i < result.length; i++) {
                     stuff.sendUtils.sendConfirmation(result[i], message, 'Notification');
                     if (data) {
-                        this.sendInfoPanelFromData(stuff, result[i], data);
+                        stuff.sendUtils.sendInfoPanelFromData(stuff.message.author.id, result[i], data);
                     } else {
-                        this.sendInfoPanel(stuff, result[i], meetingId);
+                        stuff.sendUtils.sendInfoPanel(stuff.message.author.id, result[i], meetingId);
                     }
                 }
             });
