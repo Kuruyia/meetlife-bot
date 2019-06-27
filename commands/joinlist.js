@@ -32,7 +32,7 @@ module.exports = {
         }).then(result => {
             const count = result.shift();
 
-            stuff.meetingMan.sendSearchResult(stuff, result, 'Joined meetings', null, count, page + 1);
+            stuff.sendUtils.sendSearchResult(stuff.message.channel, result, 'Joined meetings', null, count, page + 1);
         });
 	},
 };

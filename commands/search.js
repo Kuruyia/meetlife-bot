@@ -26,7 +26,7 @@ module.exports = {
                         }
                     }
                 }).then(searchResults => {
-                    stuff.meetingMan.sendSearchResult(stuff, searchResults.rows, 'Search by location - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
+                    stuff.sendUtils.sendSearchResult(stuff.message.channel, searchResults.rows, 'Search by location - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
                 });
             } else {
                 stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' location', '[location] _(page)_');
@@ -57,7 +57,7 @@ module.exports = {
                         }
                     }
                 }).then(searchResults => {
-                    stuff.meetingMan.sendSearchResult(stuff, searchResults.rows, 'Search by day - ' + queryDate.toLocaleDateString(stuff.config.locale), null, searchResults.count, page + 1);
+                    stuff.sendUtils.sendSearchResult(stuff.message.channel, searchResults.rows, 'Search by day - ' + queryDate.toLocaleDateString(stuff.config.locale), null, searchResults.count, page + 1);
                 });
             } else {
                 stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' day', '[date] _(page)_');
@@ -73,7 +73,7 @@ module.exports = {
                         }
                     }
                 }).then(searchResults => {
-                    stuff.meetingMan.sendSearchResult(stuff, searchResults.rows, 'Search by owner - @' + stuff.message.mentions.members.first().user.tag, null, searchResults.count, page + 1);
+                    stuff.sendUtils.sendSearchResult(stuff.message.channel, searchResults.rows, 'Search by owner - @' + stuff.message.mentions.members.first().user.tag, null, searchResults.count, page + 1);
                 });
             } else {
                 stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' owner', '[owner mention] _(page)_');
@@ -89,7 +89,7 @@ module.exports = {
                         }
                     }
                 }).then(searchResults => {
-                    stuff.meetingMan.sendSearchResult(stuff, searchResults.rows, 'Search by name - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
+                    stuff.sendUtils.sendSearchResult(stuff.message.channel, searchResults.rows, 'Search by name - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
                 });
             } else {
                 stuff.sendUtils.sendUsage(stuff.message.channel, this.name + ' name', '[meeting name] _(page)_');

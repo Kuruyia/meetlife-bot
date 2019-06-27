@@ -112,4 +112,20 @@ module.exports = function(discord, prefix, locale, listLimit) {
 
         return dateStr;
     }
+
+    this.sendSearchResult = function(channel, result, title, footer = null, count = result.length, page = 1) {
+        var resultList = [];
+        for (i = 0; i < result.length; i++) {
+            const currentMeetingData = result[i].dataValues;
+            const startTime = new Date(currentMeetingData.start_time * 1000);
+
+            var message = '';
+            message = message.concat('**#' + currentMeetingData.id + ' - ' + currentMeetingData.name + '** ');
+            message = message.concat(currentMeetingData.location_name_short + ', ' + startTime.toLocaleDateString(this.locale) + ' ' + startTime.toLocaleTimeString(this.locale, {hour: '2-digit', minute: '2-digit'}));
+
+            resultList.push(message);
+        }
+
+        this.sendPagedList(channel, resultList, title, footer, count, page);
+    }
 }

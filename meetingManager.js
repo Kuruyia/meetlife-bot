@@ -41,22 +41,6 @@ module.exports = function(dbObjects) {
         });
     }
 
-    this.sendSearchResult = function(stuff, result, title, footer = null, count = result.length, page = 1) {
-        var resultList = [];
-        for (i = 0; i < result.length; i++) {
-            const currentMeetingData = result[i].dataValues;
-            const startTime = new Date(currentMeetingData.start_time * 1000);
-
-            var message = '';
-            message = message.concat('**#' + currentMeetingData.id + ' - ' + currentMeetingData.name + '** ');
-            message = message.concat(currentMeetingData.location_name_short + ', ' + startTime.toLocaleDateString(stuff.config.locale) + ' ' + startTime.toLocaleTimeString(stuff.config.locale, {hour: '2-digit', minute: '2-digit'}));
-
-            resultList.push(message);
-        }
-
-        stuff.sendUtils.sendPagedList(stuff.message.channel, resultList, title, footer, count, page);
-    }
-
     this.sendInfoPanelFromData = function(stuff, channel, data, message) {
         const constructedEmbed = new stuff.discord.RichEmbed();
         constructedEmbed.setColor('BLUE');
