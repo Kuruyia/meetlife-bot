@@ -21,8 +21,14 @@ module.exports = {
                     }
                 }
 
-                stuff.meetingMan.isMeetingOver(meetingId)
-                    .then(over => {
+                stuff.meetingMan.doesMeetingExists(meetingId)
+                    .then(exists => {
+                        if (exists) {
+                            return stuff.meetingMan.isMeetingOver(meetingId);
+                        } else {
+                            throw 'Invalid Meeting ID.';
+                        }
+                    }).then(over => {
                         if (!over) {
                             return stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId, notifDelay);
                         } else {
