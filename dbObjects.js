@@ -6,6 +6,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	dialect: 'sqlite',
 	logging: false,
 	storage: 'storage.db',
+	logging: console.log
 });
 
 const UpcomingMeetings = sequelize.import('models/UpcomingMeetings');
@@ -14,7 +15,8 @@ const JoinedMeetings = sequelize.import('models/JoinedMeetings');
 JoinedMeetings.belongsTo(UpcomingMeetings, {
 	foreignKey: {
 		name: 'upcoming_meeting_id',
-		allowNull: false
+		allowNull: false,
+		unique: 'uniqueJoin'
 	},
 	onDelete: 'CASCADE'
 });
