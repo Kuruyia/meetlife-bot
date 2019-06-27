@@ -68,13 +68,13 @@ module.exports = {
                 stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name + ' day', '[date] _(page)_');
             }
         } else if (stuff.args[0] == 'owner') {
-            if (stuff.args.length >= 2 && stuff.message.mentions.users.length > 0) {
+            if (stuff.args.length >= 2 && stuff.message.mentions.users.size > 0) {
                 stuff.dbObjects.UpcomingMeetings.findAndCountAll({
                     offset: page * stuff.config.search_limit,
                     limit: stuff.config.search_limit,
                     where: {
                         owner_id: {
-                            [stuff.dbObjects.seqOp.eq]: stuff.message.mentions.members.first().id
+                            [stuff.dbObjects.seqOp.eq]: stuff.message.mentions.users.first().id
                         },
                         start_time: {
                             [stuff.dbObjects.seqOp.gt]: actualTime
