@@ -43,7 +43,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         channel.send('<@' + authorId + '>', {embed: constructedEmbed});
     },
 
-    this.sendPagedList = function(channel, textList, title, footer = null, count = textList.length, page = 1) {
+    this.sendPagedList = function(channel, authorId, textList, title, footer = null, count = textList.length, page = 1) {
         const constructedEmbed = new this.discord.RichEmbed();
         const maxPage = Math.ceil(count / this.listLimit);
         
@@ -92,7 +92,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             }
         }
 
-        channel.send(constructedEmbed);
+        channel.send('<@' + authorId + '>', {embed: constructedEmbed});
     },
 
     this.formatDate = function(startDate, endDate) {
@@ -114,7 +114,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         return dateStr;
     }
 
-    this.sendSearchResult = function(channel, result, title, footer = null, count = result.length, page = 1) {
+    this.sendSearchResult = function(channel, authorId, result, title, footer = null, count = result.length, page = 1) {
         var resultList = [];
         for (i = 0; i < result.length; i++) {
             const currentMeetingData = result[i].dataValues;
@@ -127,7 +127,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             resultList.push(message);
         }
 
-        this.sendPagedList(channel, resultList, title, footer, count, page);
+        this.sendPagedList(channel, authorId, resultList, title, footer, count, page);
     }
 
     this.sendInfoPanelFromData = function(authorId, channel, data, message) {
@@ -203,7 +203,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                         textList.push('<@' + result.users[i] + '>');
                     }
 
-                    this.sendPagedList(channel, textList, 'Members in Meeting #' + meetingId, null, result.count, page + 1);
+                    this.sendPagedList(channel, authorId, textList, 'Members in Meeting #' + meetingId, null, result.count, page + 1);
                 } else {
                     this.sendConfirmation(channel, authorId, 'No user has joined this Meeting.', 'Members in Meeting #' + meetingId);
                 }

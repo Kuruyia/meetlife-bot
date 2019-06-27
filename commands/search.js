@@ -26,7 +26,7 @@ module.exports = {
                         }
                     }
                 }).then(searchResults => {
-                    stuff.sendUtils.sendSearchResult(stuff.message.channel, searchResults.rows, 'Search by location - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
+                    stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, searchResults.rows, 'Search by location - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
                 });
             } else {
                 stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name + ' location', '[location] _(page)_');
@@ -57,13 +57,13 @@ module.exports = {
                         }
                     }
                 }).then(searchResults => {
-                    stuff.sendUtils.sendSearchResult(stuff.message.channel, searchResults.rows, 'Search by day - ' + queryDate.toLocaleDateString(stuff.config.locale), null, searchResults.count, page + 1);
+                    stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, searchResults.rows, 'Search by day - ' + queryDate.toLocaleDateString(stuff.config.locale), null, searchResults.count, page + 1);
                 });
             } else {
                 stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name + ' day', '[date] _(page)_');
             }
         } else if (stuff.args[0] == 'owner') {
-            if (stuff.args.length >= 2 && stuff.message.mentions.members.length > 0) {
+            if (stuff.args.length >= 2 && stuff.message.mentions.users.length > 0) {
                 stuff.dbObjects.UpcomingMeetings.findAndCountAll({
                     offset: page * stuff.config.search_limit,
                     limit: stuff.config.search_limit,
@@ -73,7 +73,7 @@ module.exports = {
                         }
                     }
                 }).then(searchResults => {
-                    stuff.sendUtils.sendSearchResult(stuff.message.channel, searchResults.rows, 'Search by owner - @' + stuff.message.mentions.members.first().user.tag, null, searchResults.count, page + 1);
+                    stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, searchResults.rows, 'Search by owner - @' + stuff.message.mentions.members.first().user.tag, null, searchResults.count, page + 1);
                 });
             } else {
                 stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name + ' owner', '[owner mention] _(page)_');
@@ -89,7 +89,7 @@ module.exports = {
                         }
                     }
                 }).then(searchResults => {
-                    stuff.sendUtils.sendSearchResult(stuff.message.channel, searchResults.rows, 'Search by name - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
+                    stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, searchResults.rows, 'Search by name - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
                 });
             } else {
                 stuff.sendUtils.sendUsage(stuff.message.channel, stuff.message.author.id, this.name + ' name', '[meeting name] _(page)_');

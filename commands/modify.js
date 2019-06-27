@@ -83,7 +83,7 @@ module.exports = {
                                     stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to get GPS data from this place.')
                                 }
                             }));
-                            stuff.choiceMan.sendChoicesToChannel(stuff, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
+                            stuff.choiceMan.sendChoicesToChannel(stuff, stuff.message.author.id, stuff.message.channel, stuff.config.prefix, stuff.message.author.id);
                         }
                     } else {
                         stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'No place found for query "' + stuff.args[1] + '"');

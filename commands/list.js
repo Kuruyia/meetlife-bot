@@ -30,7 +30,7 @@ module.exports = {
             limit: stuff.config.search_limit,
             order: [[stuff.dbObjects.sequelize.col('start_time'), isDesc ? 'DESC' : 'ASC']]
         }).then(result => {
-            stuff.sendUtils.sendSearchResult(stuff.message.channel, result.rows, 'Upcoming meeting list', isDesc ? 'Sorted from descending order' : 'Sorted from ascending order', result.count, page + 1);
+            stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, result.rows, 'Upcoming meeting list', isDesc ? 'Sorted from descending order' : 'Sorted from ascending order', result.count, page + 1);
         });
 	},
 };
