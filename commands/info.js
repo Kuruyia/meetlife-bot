@@ -19,7 +19,7 @@ module.exports = {
                         }
                     }
 
-                    stuff.meetingMan.sendMeetingMembersPanel(stuff, stuff.client, meetingId, page);
+                    stuff.sendUtils.sendMeetingMembersPanel(stuff.message.channel, meetingId, page);
                 } else if (stuff.args.length < 2 || stuff.args[1] == 'info') {
                     stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, meetingId);
                 } else {

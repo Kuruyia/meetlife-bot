@@ -193,4 +193,22 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                 this.sendError(channel, 'An error has occured: ' + e);
             });
     }
+
+    this.sendMeetingMembersPanel = function(channel, meetingId, page = 0) {
+        this.meetingManager.getUsersInMeeting(meetingId, this.listLimit, this.listLimit * page)
+            .then(result => {
+                if (result.count > 0) {
+                    var textList = [];
+                    for (i = 0; i < result.users.length; i++) {
+                        textList.push('<@' + result.users[i] + '>');
+                    }
+
+                    this.sendPagedList(channel, textList, 'Members in Meeting #' + meetingId, null, result.count, page + 1);
+                } else {
+                    this.sendConfirmation(channel, 'No user has joined this Meeting.', 'Members in Meeting #' + meetingId);
+                }
+            }).catch(e => {
+                this.sendError(channel, 'An error has occured: ' + e);
+            });
+    }
 }
