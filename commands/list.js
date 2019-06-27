@@ -17,10 +17,12 @@ module.exports = {
         }
 
         if (stuff.args.length >= 2) {
-            if (stuff.args[1].toLowerCase() == 'true') {
+            console.log('slt')
+            if (stuff.args[1].toLowerCase() == 'd') {
+                console.log('dab')
                 isDesc = true;
-            } else if (stuff.args[1].toLowerCase() != 'false') {
-                stuff.utils.sendError(stuff.message.channel, 'Invalid input: The second argument must be either _true_ or _false_');
+            } else if (stuff.args[1].toLowerCase() != 'a') {
+                stuff.utils.sendError(stuff.message.channel, 'Invalid input: The second argument must be either _d_ for descending or _a_ for ascending.');
                 return;
             }
         }
@@ -30,7 +32,7 @@ module.exports = {
             limit: stuff.config.search_limit,
             order: [[stuff.dbObjects.sequelize.col('start_time'), isDesc ? 'DESC' : 'ASC']]
         }).then(result => {
-            stuff.meetingMan.sendSearchResult(stuff, result.rows, 'Upcoming meeting list', stuff.args[0] == 'desc' ? 'Sorted from descending order' : 'Sorted from ascending order', result.count, page + 1);
+            stuff.meetingMan.sendSearchResult(stuff, result.rows, 'Upcoming meeting list', isDesc ? 'Sorted from descending order' : 'Sorted from ascending order', result.count, page + 1);
         });
 	},
 };
