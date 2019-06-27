@@ -63,7 +63,7 @@ module.exports = {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {
                                     stuff.meetingMan.addMeeting(stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, joinLimit)
                                     .then(result => {
-                                        stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, result.dataValues.id, 'Your Meeting has been created meeting!');
+                                        stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, result.dataValues.id, 'Your Meeting has been successfully created!');
                                     }).catch(e => {
                                         stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'There was an error while creating your Meeting: ' + e);
                                         console.log(e);
