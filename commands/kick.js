@@ -7,12 +7,12 @@ module.exports = {
             const meetingId = parseInt(stuff.args[0]);
             if (isNaN(meetingId)) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Invalid Meeting ID.');
-                return
+                return;
             }
 
             if (stuff.message.mentions.users.length <= 0) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'You must mention the user to be kicked.');
-                return
+                return;
             }
 
             const kickedUser = stuff.message.mentions.users.first();
