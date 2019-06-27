@@ -43,7 +43,7 @@ module.exports = {
                                         }
 
                                         stuff.message.channel.send(constructedEmbed);
-                                        stuff.meetingMan.notifyUsers(stuff, stuff.client, meetingId, joinedUsers.users, 'A meeting you have joined has been removed.', meetingData.dataValues);
+                                        stuff.sendUtils.notifyUsers(stuff.message.author.id, stuff.client, meetingId, joinedUsers.users, 'A meeting you have joined has been removed.', meetingData.dataValues);
                                     } else {
                                         stuff.sendUtils.sendError(stuff.message.channel, 'This meeting could not be deleted.');
                                     }

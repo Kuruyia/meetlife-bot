@@ -290,35 +290,4 @@ module.exports = function(dbObjects) {
             });
         })
     }
-
-    this.notifyUsers = function(stuff, client, meetingId, userIdList, message, data = null) {
-        var usersLookup = [];
-        for (i = 0; i < userIdList.length; i++) {
-            const actualPromise = client.fetchUser(userIdList[i]);
-            actualPromise.catch(() => undefined);
-
-            usersLookup.push(actualPromise);
-        }
-
-        Promise.all(usersLookup)
-            .then(result => {
-                for (i = 0; i < result.length; i++) {
-                    stuff.sendUtils.sendConfirmation(result[i], message, 'Notification');
-                    if (data) {
-                        stuff.sendUtils.sendInfoPanelFromData(stuff.message.author.id, result[i], data);
-                    } else {
-                        stuff.sendUtils.sendInfoPanel(stuff.message.author.id, result[i], meetingId);
-                    }
-                }
-            });
-    }
-
-    this.notifyUsersInMeeting = function(stuff, client, meetingId, message, data = null) {
-        this.getUsersInMeeting(meetingId)
-            .then(result => {
-                this.notifyUsers(stuff, client, meetingId, result.users, message, data)
-            }).catch(e => {
-                console.log('Error while notifying users: ' + e);
-            });
-    }
 }

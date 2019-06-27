@@ -211,4 +211,35 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                 this.sendError(channel, 'An error has occured: ' + e);
             });
     }
+
+    this.notifyUsers = function(authorId, client, meetingId, userIdList, message, data = null) {
+        var usersLookup = [];
+        for (i = 0; i < userIdList.length; i++) {
+            const actualPromise = client.fetchUser(userIdList[i]);
+            actualPromise.catch(() => undefined);
+
+            usersLookup.push(actualPromise);
+        }
+
+        Promise.all(usersLookup)
+            .then(result => {
+                for (i = 0; i < result.length; i++) {
+                    this.sendConfirmation(result[i], message, 'Notification');
+                    if (data) {
+                        this.sendInfoPanelFromData(authorId, result[i], data);
+                    } else {
+                        this.sendInfoPanel(authorId, result[i], meetingId);
+                    }
+                }
+            });
+    }
+
+    this.notifyUsersInMeeting = function(authorId, client, meetingId, message, data = null) {
+        this.meetingManager.getUsersInMeeting(meetingId)
+            .then(result => {
+                this.notifyUsers(authorId, client, meetingId, result.users, message, data)
+            }).catch(e => {
+                console.log('Error while notifying users: ' + e);
+            });
+    }
 }

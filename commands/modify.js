@@ -108,7 +108,7 @@ module.exports = {
         stuff.meetingMan.modifyMeetingName(id, name)
             .then(function(response) {
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, "New name: **" + response + '**', 'Name modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
-                stuff.meetingMan.notifyUsersInMeeting(stuff, stuff.client, id, 'The name of a meeting you have joined has been modified.');
+                stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The name of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
                 stuff.sendUtils.sendError(stuff.message.channel, 'Unable to modify the name of Meeting #' + id + '.');
@@ -126,7 +126,7 @@ module.exports = {
                 }
 
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.sendUtils.formatDate(startDate, endDate), 'Date modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
-                stuff.meetingMan.notifyUsersInMeeting(stuff, stuff.client, id, 'The date of a meeting you have joined has been modified.');
+                stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The date of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
                 stuff.sendUtils.sendError(stuff.message.channel, 'Unable to modify the date of Meeting #' + id + '.');
@@ -138,7 +138,7 @@ module.exports = {
         stuff.meetingMan.modifyMeetingLocation(id, actualFeature)
             .then(function(response) {
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, response.name + '\n' + response.latitude + ', ' + response.longitude, 'Location modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
-                stuff.meetingMan.notifyUsersInMeeting(stuff, stuff.client, id, 'The location of a meeting you have joined has been modified.');
+                stuff.sendUtils.notifyUsersInMeeting(stuff.message.author.id, stuff.client, id, 'The location of a meeting you have joined has been modified.');
             })
             .catch(function(e) {
                 stuff.sendUtils.sendError(stuff.message.channel, 'Unable to modify the location of Meeting #' + id + '.');

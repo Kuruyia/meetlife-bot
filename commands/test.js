@@ -7,6 +7,5 @@ module.exports = {
         
         message.channel.send(results[0].start.date().toString());*/
         //stuff.sendUtils.sendPagedList(stuff.message.channel, stuff.args, 'Test paged list', null, 42);
-        stuff.meetingMan.notifyUsersInMeeting(stuff, stuff.client, stuff.args[0], 'test');
 	},
 };
