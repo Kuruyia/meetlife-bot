@@ -8,7 +8,7 @@ module.exports = {
             if (!isNaN(meetingId)) {
                 var notifDelay = 1;
                 if (stuff.args.length >= 2) {
-                    const parsedSecondArg = parseInt(stuff.args[1])
+                    const parsedSecondArg = parseFloat(stuff.args[1])
                     if (!isNaN(parsedSecondArg) && parsedSecondArg >= 0 && parsedSecondArg <= 24 * 7) {
                         notifDelay = parsedSecondArg;
                     } else {
