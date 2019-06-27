@@ -120,9 +120,20 @@ module.exports = {
         stuff.meetingMan.modifyMeetingDate(id, startDate, endDate)
             .then(function(response) {
                 const startDate = new Date(response.startDate * 1000);
+                const actualTime = new Date().getTime() / 1000;
                 var endDate;
                 if (response.endDate) {
                     endDate = new Date(response.endDate * 1000);
+
+                    if (endDate < startDate) {
+                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'End date is before start date.');
+                        return;
+                    }
+                }
+
+                if (startDate < actualTime) {
+                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, "You can't create a Meeting in the past.");
+                    return;
                 }
 
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, stuff.sendUtils.formatDate(startDate, endDate), 'Date modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);

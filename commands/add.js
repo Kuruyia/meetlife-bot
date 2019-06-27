@@ -17,9 +17,20 @@ module.exports = {
             }
         
             const startDate = chronoRes[0].start.date().getTime() / 1000;
+            const actualTime = new Date().getTime() / 1000;
             var endDate;
             if (chronoRes[0].end) {
                 endDate = chronoRes[0].end.date().getTime() / 1000;
+
+                if (endDate < startDate) {
+                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'End date is before start date.');
+                    return;
+                }
+            }
+
+            if (startDate < actualTime) {
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, "You can't create a Meeting in the past.");
+                return;
             }
 
             var joinLimit = 0;
