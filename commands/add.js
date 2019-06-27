@@ -40,11 +40,12 @@ module.exports = {
                             const actualFeature = json.features[0];
                             
                             if (actualFeature.hasOwnProperty('geometry') && actualFeature.geometry.hasOwnProperty('coordinates')) {  
-                                stuff.meetingMan.addMeeting(stuff, stuff.args[0], actualFeature, startDate, endDate, stuff.message.author.id, joinLimit)
+                                stuff.meetingMan.addMeeting(stuff.args[0], actualFeature, startDate, endDate, stuff.message.author.id, joinLimit)
                                     .then(result => {
                                         stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, result.dataValues.id, 'Your Meeting has been created meeting!');
                                     }).catch(e => {
-                                        stuff.sendError(stuff.message.channel, stuff.message.author.id, 'There was an error while creating your Meeting.');
+                                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'There was an error while creating your Meeting: ' + e);
+                                        console.log(e);
                                     });
                             } else {
                                 stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Unable to get GPS data from this place.')
@@ -60,11 +61,12 @@ module.exports = {
                             
                             stuff.choiceMan.addChoice(stuff.message.author.id, new stuff.choice('Location results for new Meeting', choiceTexts, json.features, function(option, data) {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {
-                                    stuff.meetingMan.addMeeting(stuff, stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, joinLimit)
+                                    stuff.meetingMan.addMeeting(stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, joinLimit)
                                     .then(result => {
                                         stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, result.dataValues.id, 'Your Meeting has been created meeting!');
                                     }).catch(e => {
-                                        stuff.sendError(stuff.message.channel, stuff.message.author.id, 'There was an error while creating your Meeting.');
+                                        stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'There was an error while creating your Meeting: ' + e);
+                                        console.log(e);
                                     });
                                 } else {
                                     stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to get GPS data from this place.')
