@@ -1,3 +1,5 @@
+const version = 'MeetLife 1.0'
+
 const fs = require('fs');
 const Discord = require('discord.js');
 const chronode = require('chrono-node');
