@@ -33,7 +33,8 @@ npm run start
 ```
 
 ## Usage
-The bot comes with an integrated help panel, just type this command in any channel the bot has access:
+Every command is documented on the [project wiki](https://github.com/Arc13/meetlife-bot/wiki).  
+The bot also comes with an integrated help panel, just type this command in any channel the bot has access:
 ```
 !help
 ```
