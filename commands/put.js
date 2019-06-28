@@ -25,7 +25,7 @@ module.exports = {
             stuff.meetingMan.doesMeetingExists(meetingId)
                 .then(exists => {
                     if (exists) {
-                        return stuff.meetingMan.joinUserToMeeting(putUser.id, meetingId);
+                        return stuff.meetingMan.joinUserToMeeting(putUser.id, meetingId, 1, true);
                     } else {
                         throw "Invalid Meeting ID."
                     }

@@ -180,7 +180,7 @@ module.exports = function(dbObjects) {
         });
     }
 
-    this.joinUserToMeeting = function(userId, meetingId, notificationDelay = 1) {
+    this.joinUserToMeeting = function(userId, meetingId, notificationDelay = 1, overrideLimit = false) {
         return new Promise((resolve, reject) => {
             this.doesMeetingExists(meetingId)
                 .then(exists => {
@@ -196,7 +196,7 @@ module.exports = function(dbObjects) {
                         throw '<@' + userId + '> is already in this Meeting.';
                     }
                 }).then(isFull => {
-                    if (!isFull) {
+                    if (!isFull || overrideLimit) {
                         this.dbObjects.JoinedMeetings.create({
                             user_id: userId,
                             upcoming_meeting_id: meetingId,
