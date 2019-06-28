@@ -131,8 +131,8 @@ module.exports = {
                     }
                 }
 
-                if (startDate < actualTime) {
-                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, "You can't create a Meeting in the past.");
+                if (startDate.getTime() / 1000 < actualTime) {
+                    stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, "You can't report a Meeting to a past date.");
                     return;
                 }
 
