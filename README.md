@@ -1,6 +1,6 @@
 # MeetLife
 MeetLife is a Discord bot that manages IRL Meetings between the members of your server, so that it can expand into the real world and enforce relationships.  
-This bot is a submission for the **Discord Community Hack Week**.
+This bot is a submission for the **Discord Community Hack Week**, and is available to [join your server](https://discordapp.com/api/oauth2/authorize?client_id=332598742542712846&permissions=19456&scope=bot) during this event.
 
 ## Features
 - Natural language date processing
@@ -9,7 +9,7 @@ This bot is a submission for the **Discord Community Hack Week**.
 - Support for joining meetings, with configurable limit
 - Configurable reminder for members who joined a meeting, and notification for any modification
 - Editable meetings after creation, by their owner or the moderation team
-- Automatic database cleanup when a member leaves the server
+- Automatic database cleanup when a member leaves the server, or the bot is kicked from a server
 
 ## Installation
 This bot requires [Node.js](https://nodejs.org/en/) (v10.15.0+) to be installed on your computer.
