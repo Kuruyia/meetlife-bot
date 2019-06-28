@@ -61,7 +61,7 @@ module.exports = function(dbObjects) {
         const options = {
             url: 'https://nominatim.openstreetmap.org/search?q=' + encodeURI(query) + '&format=geocodejson&addressdetails=1',
             headers: {
-                'User-Agent': 'LifeMeet 0.1'
+                'User-Agent': 'LifeMeet 1.0'
             }
         };
 
