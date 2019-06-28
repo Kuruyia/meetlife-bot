@@ -211,7 +211,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                 if (result) {
                     this.sendInfoPanelFromData(authorId, channel, result.dataValues, message);
                 } else {
-                    this.sendError(channel, authorId, 'Invalid meeting id.');
+                    this.sendError(channel, authorId, 'Invalid Meeting ID.');
                 }
             }).catch(e => {
                 this.sendError(channel, authorId, 'An error has occured: ' + e);
