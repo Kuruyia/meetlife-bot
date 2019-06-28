@@ -1,5 +1,5 @@
 # MeetLife
-MeetLife is a Discord bot that manages IRL Meetings between the members of your server, so that it can expand into the real world and enforce relationships.
+MeetLife is a Discord bot that manages IRL Meetings between the members of your server, so that it can expand into the real world and enforce relationships.  
 This bot is a submission for the **Discord Community Hack Week**.
 
 ## Features
@@ -39,12 +39,8 @@ The bot comes with an integrated help panel, just type this command in any chann
 ```
 
 ## Acknowledgments
-[Discord.js](https://github.com/discordjs/discord.js/) - The library used to interact with Discord
-
-[chrono-node](https://github.com/wanasit/chrono) - Parses natural date to prevent having the user to follow a format
-
-[request](https://github.com/request/request) - Simplifies the use of HTTP requests
-
-[OpenStreetMap Nominatim](https://wiki.openstreetmap.org/wiki/Nominatim) - Online API to search for places in the world
-
-[sequelize](https://github.com/sequelize/sequelize) - Used to store data in a local database
+[Discord.js](https://github.com/discordjs/discord.js/) - The library used to interact with Discord   
+[chrono-node](https://github.com/wanasit/chrono) - Parses natural date to prevent having the user to follow a format   
+[request](https://github.com/request/request) - Simplifies the use of HTTP requests   
+[OpenStreetMap Nominatim](https://wiki.openstreetmap.org/wiki/Nominatim) - Online API to search for places in the world   
+[sequelize](https://github.com/sequelize/sequelize) - Used to store data in a local database 
