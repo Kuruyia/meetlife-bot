@@ -273,7 +273,6 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         }
 
         if (authorId) {
-            console.log(constructedEmbed.url)
             channel.send('<@' + authorId + '>', {embed: constructedEmbed});
         } else {
             channel.send(constructedEmbed);
