@@ -11,7 +11,7 @@ module.exports = {
                 return;
             }
 
-            if (stuff.message.mentions.users.length <= 0) {
+            if (stuff.message.mentions.users.size == 0) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'You must mention the user to be kicked.');
                 return;
             }
