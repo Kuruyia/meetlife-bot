@@ -120,17 +120,32 @@ client.on('message', message => {
 });
 
 client.on('guildMemberRemove', member => {
-    dbObjects.UpcomingMeetings.destroy({
-        where: {
-            owner_id: member.id
-        }
-    });
+    if (member.guild.available) {
+        const guildId = member.guild.id;
 
-    dbObjects.JoinedMeetings.destroy({
-        where: {
-            user_id: member.id
-        }
-    });
+        dbObjects.UpcomingMeetings.destroy({
+            where: {
+                owner_id: member.id,
+                guild_id: guildId
+            }
+        });
+    
+        dbObjects.JoinedMeetings.findAll({
+            where: {
+                user_id: member.id
+            },
+            include: [{
+                model: dbObjects.UpcomingMeetings,
+                where: {
+                    guild_id: guildId
+                }
+            }]
+        }).then(result => {
+            for (i = 0; i < result.length; i++) {
+                result[i].destroy();
+            }
+        });
+    }
 });
 
 client.login(config.token);
