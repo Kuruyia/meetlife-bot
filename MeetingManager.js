@@ -1,7 +1,7 @@
 module.exports = function(dbObjects) {
     this.dbObjects = dbObjects;
 
-    this.addMeeting = function(name, feature, startDate, endDate, ownerId, joinLimit = 0) {
+    this.addMeeting = function(name, feature, startDate, endDate, ownerId, guildId, joinLimit = 0) {
         return new Promise((resolve, reject) => {
             var locationLabel, locationName;
             if (feature.hasOwnProperty('properties') && feature.properties.hasOwnProperty('geocoding')) {
@@ -20,6 +20,7 @@ module.exports = function(dbObjects) {
                 longitude: feature.geometry.coordinates[0],
                 latitude: feature.geometry.coordinates[1],
                 owner_id: ownerId,
+                guild_id: guildId,
                 join_limit: joinLimit,
                 location_name: locationLabel,
                 location_name_short: locationName

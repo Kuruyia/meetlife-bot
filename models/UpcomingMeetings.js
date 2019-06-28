@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		guild_id: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
 		join_limit: DataTypes.INTEGER,
 		location_name: DataTypes.STRING,
 		location_name_short: DataTypes.STRING,
