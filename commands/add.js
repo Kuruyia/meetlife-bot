@@ -13,7 +13,7 @@ module.exports = {
             const chronoRes = stuff.chronode.parse(stuff.args[2]);
         
             if (chronoRes.length == 0) {
-                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to find a valid date in "' + stuff.args[2] + '"');
+                stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to find a valid date in **' + stuff.args[2] + '**');
                 return;
             }
         
