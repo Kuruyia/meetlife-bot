@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'add',
     description: 'Create a new Meeting',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.1-"Add"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 3) {

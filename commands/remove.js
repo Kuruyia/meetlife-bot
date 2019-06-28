@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'remove',
     description: 'Delete one of your Meeting',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.13-"Remove"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 1) {

@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'leave',
     description: 'Leave a Meeting',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.8-"Leave"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 1) {

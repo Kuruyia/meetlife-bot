@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'choice',
     description: 'Choice management',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.2-"Choice"-command',
     
 	execute(stuff) {
         if (stuff.args[0] == 'list') {

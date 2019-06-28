@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'remind',
     description: 'Change the remind time of a joined Meeting',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.12-"Remind"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 2) {

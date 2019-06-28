@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'kick',
     description: 'Kick a member of your Meeting',
+    urm: 'https://github.com/Arc13/meetlife-bot/wiki/1.7-"Kick"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 2) {

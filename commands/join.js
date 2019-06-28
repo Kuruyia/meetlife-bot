@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'join',
     description: 'Join a Meeting',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.5-"Join"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 1) {

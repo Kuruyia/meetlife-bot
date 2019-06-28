@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'joinlist',
     description: 'Get a list of Meetings you joined',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.6-"Joinlist"-command',
     
 	execute(stuff) {
         var page = 0;

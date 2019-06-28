@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'help',
     description: 'Provides help about this bot',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.3-"Help"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 1 && (stuff.args.length > 1 || isNaN(parseInt(stuff.args[0])))) {

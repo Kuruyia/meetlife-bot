@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'put',
     description: 'Put a user in a Meeting (Moderator only)',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.11-"Put"-command',
     
 	execute(stuff) {
         if (!stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES)) {

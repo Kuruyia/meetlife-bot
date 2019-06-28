@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'list',
     description: 'Get a list of upcoming Meetings',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.9-"List"-command',
     
 	execute(stuff) {
         var isDesc = false;

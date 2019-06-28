@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'info',
     description: 'Get information about a Meeting',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.4-"Info"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 1) {

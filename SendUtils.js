@@ -239,6 +239,12 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
     this.sendHelpPanel = function(channel, authorId, command, args, url = null) {
         const constructedEmbed = new this.discord.RichEmbed();
         constructedEmbed.setColor('PURPLE');
+        constructedEmbed.setTitle('Help - ' + command);
+
+        if (url) {
+            constructedEmbed.setURL(url);
+            constructedEmbed.setFooter('Click this embed title to open the Wiki page.');
+        }
 
         var fullCommand = this.prefix + command;
         for (i = 0; i < args.length; i++) {
@@ -249,7 +255,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                 fullCommand = fullCommand.concat(' [' + currentArg.name + ']');
             }
         }
-        constructedEmbed.addField('Help - ' + command, '**' + fullCommand + '**');
+        constructedEmbed.addField('Usage', '**' + fullCommand + '**');
 
         for (i = 0; i < args.length; i++) {
             const currentArg = args[i];
@@ -262,12 +268,8 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             }
         }
 
-        if (url) {
-            constructedEmbed.setURL(url);
-            constructedEmbed.setFooter('Click this embed title to open the Wiki page.');
-        }
-
         if (authorId) {
+            console.log(constructedEmbed.url)
             channel.send('<@' + authorId + '>', {embed: constructedEmbed});
         } else {
             channel.send(constructedEmbed);

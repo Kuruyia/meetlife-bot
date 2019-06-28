@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'modify',
     description: 'Modify aspects of your Meeting',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.10-"Modify"-command',
     
 	execute(stuff) {
         if (stuff.args.length >= 3) {

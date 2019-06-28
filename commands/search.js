@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'search',
     description: 'Search for Meetings based on a criteria',
+    url: 'https://github.com/Arc13/meetlife-bot/wiki/1.14-"Search"-command',
     
 	execute(stuff) {
         var page = 0;
