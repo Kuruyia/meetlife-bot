@@ -141,7 +141,7 @@ module.exports = function(dbObjects) {
             }
         }
 
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             this.dbObjects.UpcomingMeetings.update({
                 longitude: feature.geometry.coordinates[0],
                 latitude: feature.geometry.coordinates[1],
@@ -166,7 +166,7 @@ module.exports = function(dbObjects) {
     }
 
     this.modifyMeetingLimit = function(id, limit) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             this.dbObjects.UpcomingMeetings.update(
                 {join_limit: limit},
                 {where: {id: id}}
