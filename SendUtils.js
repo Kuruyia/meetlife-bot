@@ -5,10 +5,14 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
     this.locale = locale;
     this.listLimit = listLimit;
 
-    this.sendError = function(channel, authorId, message, title = 'Error') {
+    this.sendError = function(channel, authorId, message, title = 'Error', footer = null) {
         const constructedEmbed = new this.discord.RichEmbed();
         constructedEmbed.setColor('RED');
         constructedEmbed.addField(title, message);
+        
+        if (footer) {
+            constructedEmbed.setFooter(footer);
+        }
     
         if (authorId) {
             channel.send('<@' + authorId + '>', {embed: constructedEmbed});

@@ -40,7 +40,7 @@ module.exports = function() {
         const selectedUser = this.choices[user];
 
         if (isNaN(parsedOption) || parsedOption < 1 || parsedOption > selectedUser.data.length) {
-            return 'Invalid option';
+            return 'Choice must be between **1** and **' + selectedUser.data.length + '**';
         }
 
         selectedUser.callback(parsedOption - 1, selectedUser.data);

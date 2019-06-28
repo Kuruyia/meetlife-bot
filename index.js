@@ -63,8 +63,8 @@ client.on('message', message => {
 	const args = message.cleanContent.slice(config.prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
 
-    if (command != 'choice' && choiceMan.hasUserActiveChoice(message.author.id)) {
-        sendUtils.sendError(message.channel, message.author.id, 'You must select an option of your active choice before using the bot.');
+    if (command != 'choice' && command != 'help' && choiceMan.hasUserActiveChoice(message.author.id)) {
+        sendUtils.sendError(message.channel, message.author.id, 'You must select an option of your active choice before using the bot.', 'Error', 'Use the ' + config.prefix + 'help choice command for more help.');
         return;
     }
     

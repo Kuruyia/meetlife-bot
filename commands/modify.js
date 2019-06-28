@@ -149,7 +149,7 @@ module.exports = {
     modifyLocation(stuff, id, actualFeature, ownerOverriden) {
         stuff.meetingMan.modifyMeetingLocation(id, actualFeature)
             .then(function(response) {
-                stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, response.name + '\n' + response.latitude + ', ' + response.longitude, 'Location modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
+                stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, '**' + response.name + '**\n' + response.latitude + ', ' + response.longitude, 'Location modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
                 stuff.sendUtils.notifyUsersInMeeting(stuff.client, 'The location of a meeting you have joined has been modified.', id);
             })
             .catch(function(e) {
@@ -161,7 +161,7 @@ module.exports = {
     modifyLimit(stuff, id, limit, ownerOverriden) {
         stuff.meetingMan.modifyMeetingLimit(id, limit)
             .then(function(response) {
-                var message = response == 0 ? 'Join limit removed' : 'New join limit: **' + response + '**';
+                var message = response == 0 ? 'Join limit **removed**' : 'New join limit: **' + response + '**';
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, message, 'Join limit modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
             })
             .catch(function(e) {
