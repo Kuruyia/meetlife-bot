@@ -148,4 +148,12 @@ client.on('guildMemberRemove', member => {
     }
 });
 
+client.on('guildDelete', guild => {
+    dbObjects.UpcomingMeetings.destroy({
+        where: {
+            guild_id: guild.id
+        }
+    });
+});
+
 client.login(config.token);
