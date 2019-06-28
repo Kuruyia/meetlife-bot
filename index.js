@@ -32,6 +32,8 @@ client.on('ready', () => {
     const sequelize = dbObjects.sequelize;
     const actualTime = new Date().getTime() / 1000;
 
+    client.user.setPresence({game: { name:'Type "' + config.prefix + 'help" to start', type: 0}})
+
     sequelize.query('SELECT * FROM `joined_meetings` LEFT JOIN upcoming_meetings ON joined_meetings.upcoming_meeting_id = upcoming_meetings.id WHERE upcoming_meetings.start_time < ' + actualTime + ' + (joined_meetings.notify_delay * 3600) AND NOT joined_meetings.notified')
         .then(result => {
             const queryRes = result[0];
