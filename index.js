@@ -96,7 +96,7 @@ client.on('message', message => {
     }
 
 	if (!client.commands.has(command)) {
-        console.log('unknown command!');
+        sendUtils.sendError(message.channel, message.author.id, 'Unknown command **' + command + '**');
         return;
     }
 
