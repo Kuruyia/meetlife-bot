@@ -32,11 +32,12 @@ module.exports = function(dbObjects) {
         });
     }
 
-    this.doesMeetingExists = function(meetingId) {
+    this.doesMeetingExists = function(meetingId, guildId) {
         return new Promise((resolve, reject) => {
             this.dbObjects.UpcomingMeetings.count({
                 where: {
-                    id: meetingId
+                    id: meetingId,
+                    guild_id: guildId
                 }
             }).then(response => {
                 resolve(response > 0);
@@ -44,11 +45,12 @@ module.exports = function(dbObjects) {
         });
     }
 
-    this.getMeetingData = function(id) {
+    this.getMeetingData = function(id, guildId) {
         return new Promise((resolve, reject) => {
             this.dbObjects.UpcomingMeetings.findOne({
                 where: {
-                    id: id
+                    id: id,
+                    guild_id: guildId
                 }
             }).then(result => {
                 resolve(result);
@@ -181,9 +183,9 @@ module.exports = function(dbObjects) {
         });
     }
 
-    this.joinUserToMeeting = function(userId, meetingId, notificationDelay = 1, overrideLimit = false) {
+    this.joinUserToMeeting = function(userId, meetingId, guildId, notificationDelay = 1, overrideLimit = false) {
         return new Promise((resolve, reject) => {
-            this.doesMeetingExists(meetingId)
+            this.doesMeetingExists(meetingId, guildId)
                 .then(exists => {
                     if (exists) {
                         return this.hasUserJoinedMeeting(userId, meetingId);
@@ -216,9 +218,9 @@ module.exports = function(dbObjects) {
         });
     }
 
-    this.leaveUserFromMeeting = function(userId, meetingId) {
+    this.leaveUserFromMeeting = function(userId, meetingId, guildId) {
         return new Promise((resolve, reject) => {
-            this.doesMeetingExists(meetingId)
+            this.doesMeetingExists(meetingId, guildId)
                 .then(exists => {
                     if (exists) {
                         return this.hasUserJoinedMeeting(userId, meetingId);
@@ -306,9 +308,9 @@ module.exports = function(dbObjects) {
         });
     }
 
-    this.isMeetingOver = function(meetingId) {
+    this.isMeetingOver = function(meetingId, guildId) {
         return new Promise((resolve, reject) => {
-            this.getMeetingData(meetingId)
+            this.getMeetingData(meetingId, guildId)
                 .then(result => {
                     const data = result.dataValues;
                     const actualTime = new Date().getTime() / 1000;

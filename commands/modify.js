@@ -6,10 +6,18 @@ module.exports = {
 	execute(stuff) {
         if (stuff.args.length >= 3) {
             const meetingId = parseInt(stuff.args[0]);
+
+            if (!stuff.message.guild || !stuff.message.guild.available) {
+                stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+                return;
+            }
+            const guildId = stuff.message.guild.id;
+
             if (!isNaN(meetingId)) {
                 stuff.dbObjects.UpcomingMeetings.findOne({
                     where: {
-                        id: meetingId
+                        id: meetingId,
+                        guild_id: guildId
                     }
                 }).then(result => {
                     if (result) {
@@ -17,7 +25,7 @@ module.exports = {
                         const ownerId = data.owner_id;
 
                         if (ownerId == stuff.message.author.id || stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES)) {
-                            module.exports.modifyMeeting(stuff, meetingId, ownerId != stuff.message.author.id && stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES));
+                            module.exports.modifyMeeting(stuff, meetingId, guildId, ownerId != stuff.message.author.id && stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES));
                         } else {
                             stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'You can\'t modify this meeting because you don\'t own it.');
                         }
@@ -33,14 +41,14 @@ module.exports = {
         }
     },
     
-    modifyMeeting(stuff, id, ownerOverriden) {
+    modifyMeeting(stuff, id, guildId, ownerOverriden) {
         if (stuff.args[1] == 'name') {
             if (stuff.args[2].length > 64) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Meeting name might not exceed 64 characters.');
                 return;
             }
 
-            module.exports.modifyName(stuff, id, stuff.args[2], ownerOverriden);
+            module.exports.modifyName(stuff, id, guildId, stuff.args[2], ownerOverriden);
         } else if (stuff.args[1] == 'date') {
             const chronoRes = stuff.chronode.parse(stuff.args[2]);
         
@@ -55,7 +63,7 @@ module.exports = {
                 endDate = chronoRes[0].end.date().getTime() / 1000;
             }
 
-            module.exports.modifyDate(stuff, id, startDate, endDate, ownerOverriden);
+            module.exports.modifyDate(stuff, id, guildId, startDate, endDate, ownerOverriden);
         } else if (stuff.args[1] == 'location') {
             stuff.meetingMan.searchLocation(stuff.request, stuff.args[2])
                 .then(function(json) {
@@ -64,7 +72,7 @@ module.exports = {
                             const actualFeature = json.features[0];
                             
                             if (actualFeature.hasOwnProperty('geometry') && actualFeature.geometry.hasOwnProperty('coordinates')) {
-                                module.exports.modifyLocation(stuff, id, actualFeature, ownerOverriden);
+                                module.exports.modifyLocation(stuff, id, guildId, actualFeature, ownerOverriden);
                             } else {
                                 stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.channel, 'Unable to get GPS data from this place.')
                             }
@@ -79,7 +87,7 @@ module.exports = {
                             
                             stuff.choiceMan.addChoice(stuff.message.author.id, new stuff.choice('Location result for Meeting #' + id, choiceTexts, json.features, function(option, data) {
                                 if (data[option].hasOwnProperty('geometry') && data[option].geometry.hasOwnProperty('coordinates')) {  
-                                    module.exports.modifyLocation(stuff, id, data[option], ownerOverriden);
+                                    module.exports.modifyLocation(stuff, id, guildId, data[option], ownerOverriden);
                                 } else {
                                     stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to get GPS data from this place.')
                                 }
@@ -105,11 +113,11 @@ module.exports = {
         }
     },
 
-    modifyName(stuff, id, name, ownerOverriden) {
+    modifyName(stuff, id, guildId, name, ownerOverriden) {
         stuff.meetingMan.modifyMeetingName(id, name)
             .then(function(response) {
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, "New name: **" + response + '**', 'Name modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
-                stuff.sendUtils.notifyUsersInMeeting(stuff.client, 'The name of a meeting you have joined has been modified.', id);
+                stuff.sendUtils.notifyUsersInMeeting(stuff.client, 'The name of a meeting you have joined has been modified.', id, guildId);
             })
             .catch(function(e) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to modify the name of Meeting #' + id + '.');
@@ -117,7 +125,7 @@ module.exports = {
             });
     },
 
-    modifyDate(stuff, id, startDate, endDate, ownerOverriden) {
+    modifyDate(stuff, id, guildId, startDate, endDate, ownerOverriden) {
         stuff.meetingMan.modifyMeetingDate(id, startDate, endDate)
             .then(function(response) {
                 const startDate = new Date(response.startDate * 1000);
@@ -138,7 +146,7 @@ module.exports = {
                 }
 
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, stuff.sendUtils.formatDate(startDate, endDate), 'Date modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
-                stuff.sendUtils.notifyUsersInMeeting(stuff.client, 'The date of a meeting you have joined has been modified.', id);
+                stuff.sendUtils.notifyUsersInMeeting(stuff.client, 'The date of a meeting you have joined has been modified.', id, guildId);
             })
             .catch(function(e) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to modify the date of Meeting #' + id + '.');
@@ -146,11 +154,11 @@ module.exports = {
             });
     },
 
-    modifyLocation(stuff, id, actualFeature, ownerOverriden) {
+    modifyLocation(stuff, id, guildId, actualFeature, ownerOverriden) {
         stuff.meetingMan.modifyMeetingLocation(id, actualFeature)
             .then(function(response) {
                 stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, '**' + response.name + '**\n' + response.latitude + ', ' + response.longitude, 'Location modified for Meeting #' + id, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
-                stuff.sendUtils.notifyUsersInMeeting(stuff.client, 'The location of a meeting you have joined has been modified.', id);
+                stuff.sendUtils.notifyUsersInMeeting(stuff.client, 'The location of a meeting you have joined has been modified.', id, guildId);
             })
             .catch(function(e) {
                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'Unable to modify the location of Meeting #' + id + '.');

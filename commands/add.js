@@ -48,6 +48,12 @@ module.exports = {
             stuff.meetingMan.searchLocation(stuff.request, stuff.args[1])
                 .then(function(json) {
                     if (json.hasOwnProperty('features') && json.features.length > 0) {
+                        if (!stuff.message.guild || !stuff.message.guild.available) {
+                            stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+                            return;
+                        }
+                        const guildId = stuff.message.guild.id;
+                        
                         if (json.features.length == 1) {
                             const actualFeature = json.features[0];
                             
@@ -55,7 +61,7 @@ module.exports = {
                                 if (stuff.message.guild && stuff.message.guild.available) {
                                     stuff.meetingMan.addMeeting(stuff.args[0], actualFeature, startDate, endDate, stuff.message.author.id, stuff.message.guild.id, joinLimit)
                                         .then(result => {
-                                            stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, result.dataValues.id, 'Your Meeting has been created meeting!');
+                                            stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, result.dataValues.id, guildId, 'Your Meeting has been created meeting!');
                                         }).catch(e => {
                                             stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'There was an error while creating your Meeting: ' + e);
                                             console.log(e);
@@ -80,7 +86,7 @@ module.exports = {
                                     if (stuff.message.guild && stuff.message.guild.available) {
                                         stuff.meetingMan.addMeeting(stuff.args[0], data[option], startDate, endDate, stuff.message.author.id, stuff.message.guild.id, joinLimit)
                                             .then(result => {
-                                                stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, result.dataValues.id, 'Your Meeting has been successfully created!');
+                                                stuff.sendUtils.sendInfoPanel(stuff.message.author.id, stuff.message.channel, result.dataValues.id, guildId, 'Your Meeting has been successfully created!');
                                             }).catch(e => {
                                                 stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'There was an error while creating your Meeting: ' + e);
                                                 console.log(e);

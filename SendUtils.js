@@ -209,8 +209,8 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
             });
     }
 
-    this.sendInfoPanel = function(authorId, channel, id, message) {
-        this.meetingManager.getMeetingData(id)
+    this.sendInfoPanel = function(authorId, channel, id, guildId, message) {
+        this.meetingManager.getMeetingData(id, guildId)
             .then(result => {
                 if (result) {
                     this.sendInfoPanelFromData(authorId, channel, result.dataValues, message);
@@ -280,7 +280,7 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
         }
     }
 
-    this.notifyUser = function(client, userId, message, meetingId = null, data = null) {
+    this.notifyUser = function(client, userId, message, meetingId = null, guildId = null, data = null) {
         return new Promise((resolve, reject) => {
             client.fetchUser(userId)
                 .then(result => {
@@ -290,23 +290,23 @@ module.exports = function(discord, meetingManager, prefix, locale, listLimit) {
                         if (data) {
                             this.sendInfoPanelFromData(null, result, data);
                         } else {
-                            this.sendInfoPanel(null, result, meetingId);
+                            this.sendInfoPanel(null, result, meetingId, guildId);
                         }
                     }
                 }).catch(() => undefined);
         });
     }
 
-    this.notifyUsers = function(client, userIdList, message, meetingId = null, data = null) {
+    this.notifyUsers = function(client, userIdList, message, meetingId = null, guildId = null, data = null) {
         for (i = 0; i < userIdList.length; i++) {
-            this.notifyUser(client, userIdList[i], message, meetingId, data);
+            this.notifyUser(client, userIdList[i], message, meetingId, guildId, data);
         }
     }
 
-    this.notifyUsersInMeeting = function(client, message, meetingId = null, data = null) {
+    this.notifyUsersInMeeting = function(client, message, meetingId = null, guildId = null, data = null) {
         this.meetingManager.getUsersInMeeting(meetingId)
             .then(result => {
-                this.notifyUsers(client, result.users, message, meetingId, data)
+                this.notifyUsers(client, result.users, message, meetingId, guildId, data)
             }).catch(e => {
                 console.log('Error while notifying users: ' + e);
             });

@@ -7,7 +7,13 @@ module.exports = {
         if (stuff.args.length >= 1) {
             const meetingId = parseInt(stuff.args[0]);
             if (!isNaN(meetingId)) {
-                stuff.meetingMan.leaveUserFromMeeting(stuff.message.author.id, meetingId)
+                if (!stuff.message.guild || !stuff.message.guild.available) {
+                    stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+                    return;
+                }
+                const guildId = stuff.message.guild.id;
+
+                stuff.meetingMan.leaveUserFromMeeting(stuff.message.author.id, meetingId, guildId)
                     .then(function() {
                         stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, 'You have left Meeting **#' + meetingId + '**');
                     })

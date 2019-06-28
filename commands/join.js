@@ -22,16 +22,22 @@ module.exports = {
                     }
                 }
 
-                stuff.meetingMan.doesMeetingExists(meetingId)
+                if (!stuff.message.guild || !stuff.message.guild.available) {
+                    stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+                    return;
+                }
+                const guildId = stuff.message.guild.id;
+
+                stuff.meetingMan.doesMeetingExists(meetingId, guildId)
                     .then(exists => {
                         if (exists) {
-                            return stuff.meetingMan.isMeetingOver(meetingId);
+                            return stuff.meetingMan.isMeetingOver(meetingId, guildId);
                         } else {
                             throw 'Invalid Meeting ID.';
                         }
                     }).then(over => {
                         if (!over) {
-                            return stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId, notifDelay);
+                            return stuff.meetingMan.joinUserToMeeting(stuff.message.author.id, meetingId, guildId, notifDelay);
                         } else {
                             throw "You can't join a finished Meeting.";
                         }
@@ -46,8 +52,7 @@ module.exports = {
                         }
 
                         stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, confirmMessage);
-                    })
-                    .catch(function(error) {
+                    }).catch(function(error) {
                         stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, error);
                     });
             } else {

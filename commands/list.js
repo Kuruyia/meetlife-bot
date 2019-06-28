@@ -28,11 +28,18 @@ module.exports = {
             }
         }
 
+        if (!stuff.message.guild || !stuff.message.guild.available) {
+            stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+            return;
+        }
+        const guildId = stuff.message.guild.id;
+
         stuff.dbObjects.UpcomingMeetings.findAndCountAll({
             where: {
                 start_time: {
                     [stuff.dbObjects.seqOp.gt]: actualTime
-                }
+                },
+                guild_id: guildId
             },
             offset: page * stuff.config.search_limit,
             limit: stuff.config.search_limit,

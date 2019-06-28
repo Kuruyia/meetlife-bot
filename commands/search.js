@@ -17,6 +17,12 @@ module.exports = {
                 return;
             }
         }
+
+        if (!stuff.message.guild || !stuff.message.guild.available) {
+            stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+            return;
+        }
+        const guildId = stuff.message.guild.id;
         
         if (stuff.args[0] == 'location') {
             if (stuff.args.length >= 2) {
@@ -29,7 +35,8 @@ module.exports = {
                         },
                         start_time: {
                             [stuff.dbObjects.seqOp.gt]: actualTime
-                        }
+                        },
+                        guild_id: guildId
                     }
                 }).then(searchResults => {
                     stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, searchResults.rows, 'Search by location - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);
@@ -60,7 +67,8 @@ module.exports = {
                     where: {
                         start_time: {
                             [stuff.dbObjects.seqOp.between]: [startTimestamp, endTimestamp]
-                        }
+                        },
+                        guild_id: guildId
                     }
                 }).then(searchResults => {
                     stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, searchResults.rows, 'Search by day - ' + queryDate.toLocaleDateString(stuff.config.locale), null, searchResults.count, page + 1);
@@ -79,7 +87,8 @@ module.exports = {
                         },
                         start_time: {
                             [stuff.dbObjects.seqOp.gt]: actualTime
-                        }
+                        },
+                        guild_id: guildId
                     }
                 }).then(searchResults => {
                     stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, searchResults.rows, 'Search by owner - @' + stuff.message.mentions.members.first().user.tag, null, searchResults.count, page + 1);
@@ -98,7 +107,8 @@ module.exports = {
                         },
                         start_time: {
                             [stuff.dbObjects.seqOp.gt]: actualTime
-                        }
+                        },
+                        guild_id: guildId
                     }
                 }).then(searchResults => {
                     stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, searchResults.rows, 'Search by name - "' + stuff.args[1] + '"', null, searchResults.count, page + 1);

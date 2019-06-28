@@ -18,10 +18,16 @@ module.exports = {
 
             const kickedUser = stuff.message.mentions.users.first();
 
-            stuff.meetingMan.doesMeetingExists(meetingId)
+            if (!stuff.message.guild || !stuff.message.guild.available) {
+                stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+                return;
+            }
+            const guildId = stuff.message.guild.id;
+
+            stuff.meetingMan.doesMeetingExists(meetingId, guildId)
                 .then(exists => {
                     if (exists) {
-                        return stuff.meetingMan.getMeetingData(meetingId);
+                        return stuff.meetingMan.getMeetingData(meetingId, guildId);
                     } else {
                         throw "Invalid Meeting ID."
                     }
@@ -30,7 +36,7 @@ module.exports = {
                     if (data.owner_id == stuff.message.author.id || stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES)) {
                         return Promise.all([
                             data.owner_id != stuff.message.author.id && stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES),
-                            stuff.meetingMan.leaveUserFromMeeting(kickedUser.id, meetingId)
+                            stuff.meetingMan.leaveUserFromMeeting(kickedUser.id, meetingId, guildId)
                         ]);
                     } else {
                         throw "You can't kick a member of this Meeting because you don't own it.";

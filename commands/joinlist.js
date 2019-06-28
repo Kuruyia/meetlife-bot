@@ -18,9 +18,15 @@ module.exports = {
             }
         }
 
+        if (!stuff.message.guild || !stuff.message.guild.available) {
+            stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+            return;
+        }
+        const guildId = stuff.message.guild.id;
+
         stuff.dbObjects.JoinedMeetings.findAndCountAll({
             where: {
-                user_id: stuff.message.author.id,
+                user_id: stuff.message.author.id
             },
             offset: page * stuff.config.search_limit,
             limit: stuff.config.search_limit,
@@ -29,14 +35,16 @@ module.exports = {
                 where: {
                     start_time: {
                         [stuff.dbObjects.seqOp.gt]: actualTime
-                    }
+                    },
+                    guild_id: guildId
                 }
             }]
         }).then(result => {
             var promiseList = [result.count];
             for (i = 0; i < result.rows.length; i++) {
                 const data = result.rows[i].dataValues;
-                promiseList.push(stuff.meetingMan.getMeetingData(data.upcoming_meeting_id));
+                const guildId = data.upcoming_meeting.dataValues.guild_id;
+                promiseList.push(stuff.meetingMan.getMeetingData(data.upcoming_meeting_id, guildId));
             }
             
             return Promise.all(promiseList);
@@ -44,6 +52,9 @@ module.exports = {
             const count = result.shift();
 
             stuff.sendUtils.sendSearchResult(stuff.message.channel, stuff.message.author.id, result, 'Joined meetings', null, count, page + 1);
+        }).catch(function(error) {
+            stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, error);
+            console.log(error);
         });
     },
 };

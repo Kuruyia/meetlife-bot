@@ -6,10 +6,18 @@ module.exports = {
 	execute(stuff) {
         if (stuff.args.length >= 1) {
             const meetingId = parseInt(stuff.args[0]);
+
+            if (!stuff.message.guild || !stuff.message.guild.available) {
+                stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+                return;
+            }
+            const guildId = stuff.message.guild.id;
+
             if (!isNaN(meetingId)) {
                 stuff.dbObjects.UpcomingMeetings.findOne({
                     where: {
-                        id: meetingId
+                        id: meetingId,
+                        guild_id: guildId
                     }
                 }).then(result => {
                     if (result) {
@@ -17,7 +25,7 @@ module.exports = {
                         const ownerId = data.owner_id;
 
                         if (ownerId == stuff.message.author.id || stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES)) {
-                            stuff.meetingMan.getMeetingData(meetingId)
+                            stuff.meetingMan.getMeetingData(meetingId, guildId)
                                 .then(result => {
                                     return Promise.all([result, stuff.meetingMan.getUsersInMeeting(meetingId)]);
                                 }).then(result => {
@@ -38,7 +46,7 @@ module.exports = {
                                         const ownerOverriden = ownerId != stuff.message.author.id && stuff.message.member.hasPermission(stuff.discord.Permissions.FLAGS.MANAGE_MESSAGES);
                                         
                                         stuff.sendUtils.sendConfirmation(stuff.message.channel, stuff.message.author.id, 'This Meeting has been removed.', 'Meeting #' + meetingId, ownerOverriden ? 'Moderator mode - Owner verification has been bypassed' : null);
-                                        stuff.sendUtils.notifyUsers(stuff.client, joinedUsers.users, 'A Meeting you have joined has been removed.', meetingId, meetingData.dataValues);
+                                        stuff.sendUtils.notifyUsers(stuff.client, joinedUsers.users, 'A Meeting you have joined has been removed.', meetingId, guildId, meetingData.dataValues);
                                     } else {
                                         stuff.sendUtils.sendError(stuff.message.channel, stuff.message.author.id, 'This Meeting could not be deleted.');
                                     }

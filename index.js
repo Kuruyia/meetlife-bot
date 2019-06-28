@@ -42,6 +42,7 @@ client.on('ready', () => {
                 const currentRow = queryRes[i];
                 const userId = currentRow.user_id;
                 const meetingId = currentRow.upcoming_meeting_id;
+                const guildId = currentRow.guild_id;
 
                 dbObjects.JoinedMeetings.update(
                     {notified: true},
@@ -51,7 +52,7 @@ client.on('ready', () => {
                     }}
                 );
 
-                sendUtils.notifyUser(client, userId, 'A Meeting you have joined will start soon.', meetingId);
+                sendUtils.notifyUser(client, userId, 'A Meeting you have joined will start soon.', meetingId, guildId);
             }
         });
 }, 60 * 1000);

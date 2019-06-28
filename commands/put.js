@@ -23,10 +23,20 @@ module.exports = {
 
             const putUser = stuff.message.mentions.users.first();
 
-            stuff.meetingMan.doesMeetingExists(meetingId)
+            if (!stuff.message.guild || !stuff.message.guild.available) {
+                stuff.sendUtils.sendError(stuff.dbObjects.UpcomingMeetings, stuff.message.author.id, stuff.message.channel, 'Guild is not available for this operation.')
+                return;
+            }
+            const guildId = stuff.message.guild.id;
+
+            stuff.meetingMan.doesMeetingExists(meetingId, guildId)
                 .then(exists => {
                     if (exists) {
-                        return stuff.meetingMan.joinUserToMeeting(putUser.id, meetingId, 1, true);
+                        if (!stuff.message.guild || !stuff.message.guild.available) {
+                            throw 'Guild is not available for this operation.';
+                        }
+
+                        return stuff.meetingMan.joinUserToMeeting(putUser.id, meetingId, guildId, 1, true);
                     } else {
                         throw "Invalid Meeting ID."
                     }
